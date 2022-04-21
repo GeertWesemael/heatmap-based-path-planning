@@ -30,6 +30,28 @@ class Path:
         else:
             return None
 
+    def add_to_path(self, path):
+        self.path_list = self.path_list | path.path_list
+        self.keys = list(self.path_list)
+        self.values = list(self.path_list.values())
+
+    def add_to_path_safe(self, path):
+        lst = list(path.path_list)
+        for p in self.keys:
+            if p in lst:
+                if path.path_list[p] != self.path_list[p]:
+                    raise Exception("can't add path, because overlap is different")
+        self.path_list = self.path_list | path.path_list
+        self.keys = list(self.path_list)
+        self.values = list(self.path_list.values())
+
+    @classmethod
+    def stand_still(cls, fr, to,coordinate):
+        path = {}
+        for i in range(fr, to+1):
+            path[i] = coordinate
+        return cls(path)
+
     @classmethod
     def random_path(cls, fr, to, map):
         path = {}
@@ -45,9 +67,9 @@ class Path:
 
     def print_path(self, map):
 
-        print("path start",end='')
+        print("path start", end='')
         for p in self.values:
-            print(" -> "+str(p),end='')
+            print(" -> " + str(p), end='')
         print(" -> end")
 
         co = {}
