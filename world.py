@@ -82,10 +82,16 @@ class World:
             print("world at time " + str(t) + " :")
             print("x", end='')
             for q in range(len(print_list[0])):
-                print("  " + str(q), end='')
+                if len(str(q)) > 1:
+                    print(" " + str(q), end='')
+                else:
+                    print("  " + str(q), end='')
             for y in range(len(print_list)):
                 print("")
-                print(y, end='')
+                if len(str(y)) > 1:
+                    print(y, end='')
+                else:
+                    print(str(y) + " ", end='')
                 for x in range(len(print_list[0])):
                     st = str(print_list[y][x])
                     if len(st) == 1:

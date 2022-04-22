@@ -6,9 +6,26 @@ class Map:
         self.matrix = matrix
 
     def print_map(self):
+        print("x ", end='')
+        for q in range(len(self.matrix[0])):
+            if len(str(q))>1:
+                print(" " + str(q), end='')
+            else:
+                print("  " + str(q), end='')
+        for y in range(len(self.matrix)):
+            print("")
+            if len(str(y))>1:
+                print(y, end='')
+            else:
+                print(str(y) + " ", end='')
+
+            for x in range(len(self.matrix[0])):
+                e = self.matrix[y][x]
+                if e == 1:
+                    print("  " + "#", end='')
+                if e == 0:
+                    print("  " + ".", end='')
         print("")
-        for i in self.matrix:
-            print(i)
 
     def get_locations_of(self, value):
         locations = []

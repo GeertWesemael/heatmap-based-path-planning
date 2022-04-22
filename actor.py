@@ -15,6 +15,9 @@ class Actor:
     def random_walking_actor(cls, fr, to, world):
         return cls(path.Path.random_path(fr, to, world), world)
 
+    def walk_to_zone(self,zone):
+        self.walk_to(zone.get_random_location())
+
     def walk_to(self, coordinate):
         last_co = self.path.get_end_location()
         last_time = self.path.get_end_time()
