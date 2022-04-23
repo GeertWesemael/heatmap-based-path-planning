@@ -1,7 +1,8 @@
 import random
 
+
 class Zone:
-    def __init__(self,name,unique_letter,coordinates):
+    def __init__(self, name, unique_letter, coordinates):
         self.name = name
         self.coordinates = coordinates
         self.letter = unique_letter
@@ -10,11 +11,20 @@ class Zone:
         return random.choice(self.coordinates)
 
     @classmethod
-    def combined_zone(cls,zone1,zone2):
-        return cls(zone1.name+"-"+zone2.name,"C",zone1.coordinates+zone2.coordinates)
+    def combined_zone(cls, zone1, zone2):
+        return cls("c-" + zone1.name + "-" + zone2.name, "c", zone1.coordinates + zone2.coordinates)
+
+    @classmethod
+    def combined_zones(cls, list_of_zones):
+        name = "C"
+        coord = []
+        for z in list_of_zones:
+            name = name + "-" + z.name
+            coord = coord + z.coordinates
+        return cls(name, "C", coord)
 
 
-def print_zone(map,list_of_zones):
+def print_zone(map, list_of_zones):
     print("Zones")
     print("x ", end='')
     for q in range(len(map.matrix[0])):
@@ -31,12 +41,12 @@ def print_zone(map,list_of_zones):
 
         for x in range(len(map.matrix[0])):
             e = map.matrix[y][x]
-            co =(x,y)
+            co = (x, y)
             isZone = False
             for z in list_of_zones:
                 if co in z.coordinates:
                     print("  " + z.letter, end='')
-                    if e ==1:
+                    if e == 1:
                         raise Exception("zone in wall")
                     isZone = True
             if not isZone:

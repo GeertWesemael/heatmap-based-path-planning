@@ -1,19 +1,22 @@
 import path
 import astar
 
-
 class Actor:
-    def __init__(self, path_, world):
+    def __init__(self, path_, map_):
         self.path = path_
-        self.map = world
+        self.map = map_
 
     @classmethod
-    def actor_at(cls, coordinate, time, world):
-        return cls(path.Path({time: coordinate}), world)
+    def actor_at(cls, coordinate, time, map_):
+        return cls(path.Path({time: coordinate}), map_)
 
     @classmethod
-    def random_walking_actor(cls, fr, to, world):
-        return cls(path.Path.random_path(fr, to, world), world)
+    def actor_at_zone(cls, zone, time, map_):
+        return cls(path.Path({time: zone.get_random_location()}), map_)
+
+    @classmethod
+    def random_walking_actor(cls, fr, to, map_):
+        return cls(path.Path.random_path(fr, to, map_), map_)
 
     def walk_to_zone(self,zone):
         self.walk_to(zone.get_random_location())

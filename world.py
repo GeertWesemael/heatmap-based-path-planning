@@ -1,4 +1,7 @@
 import numpy as np
+from matplotlib.collections import LineCollection
+from timefunct import sec_to_hour_min_string, sec_to_hour
+import matplotlib.pyplot as plt
 
 abc = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -9,12 +12,18 @@ class World:
         self.actors = []
 
     def add_actor(self, actor):
+        #check overlap walls
+        for p in actor.path.values:
+            (x,y) = p
+            if self.map.matrix[y][x] == 1:
+                raise Exception("actor walks through a wall")
+        #check overlap other actors
         can_add = True
         for a in self.actors:
             for key in a.path.path_list:
                 value = a.path.path_list[key]
                 if key in actor.path.keys and actor.path.path_list[key] == value:
-                    raise Exception("can't add actor, because of overlap")
+                    raise Exception("can't add actor, because of overlap at time "+ str(key) + " at " + str(actor.path.path_list[key]))
                     # print("can't add actor, because of overlap")
                     can_add = False
                     break
@@ -36,7 +45,7 @@ class World:
         return free_co_list
 
     def get_min_time(self):
-        min_ = 9999
+        min_ = 999999999
         if len(self.actors) == 0:
             return None
         else:
@@ -64,7 +73,11 @@ class World:
             print("cant find min or max: no actors?")
             print(self.actors)
             return
+
+        last_print = ""
+
         for t in range(min_, max_ + 1):
+            print_string = ""
             print_list = np.copy(np.array(self.map.matrix)).tolist()
             for a_index in range(len(self.actors)):
                 actor_path = self.actors[a_index].path.path_list
@@ -79,25 +92,52 @@ class World:
                     if print_list[y][x] == 0:
                         print_list[y][x] = "."
 
-            print("world at time " + str(t) + " :")
-            print("x", end='')
+            print_string += "x"
             for q in range(len(print_list[0])):
                 if len(str(q)) > 1:
-                    print(" " + str(q), end='')
+                    print_string += " " + str(q)
                 else:
-                    print("  " + str(q), end='')
+                    print_string += "  " + str(q)
             for y in range(len(print_list)):
-                print("")
+                print_string += "\n"
                 if len(str(y)) > 1:
-                    print(y, end='')
+                    print_string += str(y)
                 else:
-                    print(str(y) + " ", end='')
+                    print_string += str(y) + " "
                 for x in range(len(print_list[0])):
                     st = str(print_list[y][x])
                     if len(st) == 1:
-                        print("  " + str(print_list[y][x]), end='')
+                        print_string += "  " + str(print_list[y][x])
                     if len(st) == 2:
-                        print(" " + str(print_list[y][x]), end='')
+                        print_string += " " + str(print_list[y][x])
                     if len(st) > 2:
-                        print(" __", end='')
-            print("")
+                        print_string += " __"
+            if last_print != print_string:
+                print("\nworld at time " + sec_to_hour_min_string(t) + " :\n" + print_string)
+            last_print = print_string
+
+    def plot_world(self):
+        fig, ax = plt.subplots()
+        for a in self.actors:
+            data = np.array(a.path.values)
+
+            x = data[:, 0]
+            y = data[:, 1]
+            cols = list(map(sec_to_hour, a.path.keys)) + [8,18]
+
+            points = np.array([x, y]).T.reshape(-1, 1, 2)
+            segments = np.concatenate([points[:-1], points[1:]], axis=1)
+
+            lc = LineCollection(segments, cmap='rainbow')
+            lc.set_array(cols)
+            lc.set_linewidth(2)
+            line = ax.add_collection(lc)
+        fig.colorbar(line, ax=ax)
+
+        map_data = np.array(self.map.get_locations_of(1))
+        ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")
+        ax.set_xlim(0, 43)
+        ax.set_ylim(0, 19)
+        ax.set_aspect('equal', adjustable='datalim')
+        plt.gca().invert_yaxis()
+        plt.show()

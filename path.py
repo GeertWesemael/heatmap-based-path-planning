@@ -5,6 +5,8 @@ import random
 # consists of the locations an actor is at all timeframes
 class Path:
     def __init__(self, path_dict):
+        if len(path_dict) == 0:
+            raise Exception("path has length 0")
         self.path_list = path_dict
         self.keys = list(path_dict)
         self.values = list(path_dict.values())

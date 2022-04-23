@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import map
+import map_
 import path
 import actor
 import world
@@ -55,7 +55,7 @@ path_a = {
 # world1.add_actor(actor3)
 # world1.print_world()
 
-map1 = map.Map(matrix_map1)
+map1 = map_.Map(matrix_map1)
 map1.print_map()
 
 actorA = actor.Actor.actor_at((1,1), 1, map1)
