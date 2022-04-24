@@ -117,6 +117,8 @@ class World:
     #         last_print = print_string
 
     def plot_world(self):
+        if len(self.actors) == 0:
+            raise Exception("No Actors in this world")
         fig, ax = plt.subplots()
         for a in self.actors:
             data = np.array(a.path.values)

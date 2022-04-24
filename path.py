@@ -136,7 +136,7 @@ class Path:
 
         x = data[:, 0]
         y = data[:, 1]
-        cols = list(map(sec_to_hour, self.keys))
+        cols = list(self.keys) #map(sec_to_hour,
 
         points = np.array([x, y]).T.reshape(-1, 1, 2)
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
