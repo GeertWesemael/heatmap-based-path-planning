@@ -47,7 +47,8 @@ def a_star(map, start_co, end_co, distance=1):
         if current_co == end_co:
             return reconstruct_path(came_from, current_co)
 
-        for neighbor_co in get_neighbors(current_co, map):
+        for i in get_neighbors(current_co, map):
+            (neighbor_co,distance) = i
             new_g_score = g_score[current_co] + distance
             if new_g_score < g_score[neighbor_co]:
                 came_from[neighbor_co] = current_co
@@ -60,9 +61,18 @@ def a_star(map, start_co, end_co, distance=1):
     print("Error: goal never reached")
 
 
+
 def path_to_path_object(path_in_list, start_time):
     path_dict = {}
-    for e in path_in_list:
-        path_dict[start_time] = e
-        start_time = start_time + 1
+    for e in range(len(path_in_list)):
+        path_dict[start_time] = path_in_list[e]
+        current = path_in_list[e]
+        if e == len(path_in_list)-1:
+            break
+        next = path_in_list[e+1]
+        # nexto
+        if current[0] == next[0] or current[1] == next[1]:
+            start_time = start_time + 1
+        else: #diagonal
+            start_time = start_time + 1.4
     return path.Path(path_dict)

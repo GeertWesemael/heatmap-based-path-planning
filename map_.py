@@ -37,28 +37,43 @@ class Map:
                 locations.append((x, y))
         return locations
 
-    def get_neighbors_coordinates(self, coordinate):
-        neighbors = []
-        (xco, yco) = coordinate
-        if xco - 1 >= 0:
-            neighbors.append((xco - 1, yco))
-        if yco - 1 >= 0:
-            neighbors.append((xco, yco - 1))
-        if xco + 1 < len(self.matrix[0]):
-            neighbors.append((xco + 1, yco))
-        if yco + 1 < len(self.matrix):
-            neighbors.append((xco, yco + 1))
-        return neighbors
+    # def get_neighbors_coordinates(self, coordinate):
+    #     neighbors = []
+    #     (xco, yco) = coordinate
+    #     if xco - 1 >= 0:
+    #         neighbors.append((xco - 1, yco))
+    #     if yco - 1 >= 0:
+    #         neighbors.append((xco, yco - 1))
+    #     if xco + 1 < len(self.matrix[0]):
+    #         neighbors.append((xco + 1, yco))
+    #     if yco + 1 < len(self.matrix):
+    #         neighbors.append((xco, yco + 1))
+    #     return neighbors
 
     def get_free_neighbors_coordinates(self, coordinate):
         neighbors = []
         (xco, yco) = coordinate
+
+        distance = 1
+        # next to
         if xco - 1 >= 0 and self.matrix[yco][xco - 1] == 0:
-            neighbors.append((xco - 1, yco))
+            neighbors.append(((xco - 1, yco),distance))
         if yco - 1 >= 0 and self.matrix[yco - 1][xco] == 0:
-            neighbors.append((xco, yco - 1))
+            neighbors.append(((xco, yco - 1),distance))
         if xco + 1 < len(self.matrix[0]) and self.matrix[yco][xco + 1] == 0:
-            neighbors.append((xco + 1, yco))
+            neighbors.append(((xco + 1, yco),distance))
         if yco + 1 < len(self.matrix) and self.matrix[yco + 1][xco] == 0:
-            neighbors.append((xco, yco + 1))
+            neighbors.append(((xco, yco + 1),distance))
+
+        distance = 1.4
+        # diagonal
+        if xco - 1 >= 0 and yco - 1 >= 0 and self.matrix[yco - 1][xco - 1] == 0:
+            neighbors.append(((xco - 1, yco - 1),distance))
+        if xco + 1 < len(self.matrix[0]) and yco + 1 < len(self.matrix) and self.matrix[yco + 1][xco + 1] == 0:
+            neighbors.append(((xco + 1, yco + 1),distance))
+        if xco + 1 < len(self.matrix[0]) and yco - 1 >= 0 and self.matrix[yco - 1][xco + 1] == 0:
+            neighbors.append(((xco + 1, yco - 1),distance))
+        if xco - 1 >= 0 and yco + 1 < len(self.matrix) and self.matrix[yco + 1][xco - 1] == 0:
+            neighbors.append(((xco - 1, yco + 1),distance))
+
         return neighbors

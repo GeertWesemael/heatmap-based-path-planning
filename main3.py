@@ -53,9 +53,9 @@ c_zone = zone.Zone("c","C", [(3,3)])
 zones = [a_zone,b_zone,c_zone]
 
 actorA = actor.Actor.actor_at((1, 1), 1.5, map1)
-actorA.walk_to((6, 6))
+actorA.walk_to((1, 6))
 actorA.wait(5)
-actorA.walk_to((6, 3))
+actorA.walk_to((6, 6))
 actorA.wait_till(30)
 actorA.walk_to((6, 2))
 
@@ -65,8 +65,8 @@ actorB.wait(5)
 actorB.walk_to_zone(c_zone)
 actorB.wait_till(100)
 actorB.walk_to_zone(zone.Zone.combined_zones(zones))
+print(actorB.path.path_list)
 
-# actorA.print_path()
 actorA.plot_path()
 
 world1 = world.World(map1)
