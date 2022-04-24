@@ -1,31 +1,35 @@
 import path
 import astar
 
+
 class Actor:
     def __init__(self, path_, map_):
         self.path = path_
-        self.map = map_
+        self.map_ = map_
 
-    @classmethod
+    @classmethod  # stand still at least 1 sec
     def actor_at(cls, coordinate, time, map_):
-        return cls(path.Path({time: coordinate}), map_)
+        return cls(path.Path.stand_still(time, time + 1, coordinate), map_)
 
     @classmethod
     def actor_at_zone(cls, zone, time, map_):
-        return cls(path.Path({time: zone.get_random_location()}), map_)
+        return cls(path.Path.stand_still(time, time + 1, zone.get_random_location()), map_)
 
     @classmethod
     def random_walking_actor(cls, fr, to, map_):
         return cls(path.Path.random_path(fr, to, map_), map_)
 
-    def walk_to_zone(self,zone):
+    def walk_to_zone(self, zone):
         self.walk_to(zone.get_random_location())
 
     def walk_to(self, coordinate):
-        last_co = self.path.get_end_location()
-        last_time = self.path.get_end_time()
-        new_path = astar.path_to_path_object(astar.a_star(self.map, last_co, coordinate), last_time)
-        self.path.add_to_path_safe(new_path)
+        if int(coordinate[0]) == coordinate[0] and int(coordinate[1]) == coordinate[1]:
+            last_co = self.path.get_end_location()
+            last_time = self.path.get_end_time()
+            new_path = astar.path_to_path_object(astar.a_star(self.map_, last_co, coordinate), last_time)
+            self.path.add_to_path_safe(new_path)
+        else:
+            raise Exception("can't give float coord to astar")
 
     def wait_till(self, time):
         last_time = self.path.get_end_time()
@@ -38,5 +42,11 @@ class Actor:
     def wait(self, timeframe):
         last_time = self.path.get_end_time()
         last_co = self.path.get_end_location()
-        waiting_path = path.Path.stand_still(last_time, last_time+timeframe, last_co)
+        waiting_path = path.Path.stand_still(last_time, last_time + timeframe, last_co)
         self.path.add_to_path_safe(waiting_path)
+
+    def print_path(self):
+        self.path.print_path(self.map_)
+
+    def plot_path(self):
+        self.path.plot_path(self.map_)

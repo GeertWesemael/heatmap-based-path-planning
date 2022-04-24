@@ -8,13 +8,13 @@ class Map:
     def print_map(self):
         print("x ", end='')
         for q in range(len(self.matrix[0])):
-            if len(str(q))>1:
+            if len(str(q)) > 1:
                 print(" " + str(q), end='')
             else:
                 print("  " + str(q), end='')
         for y in range(len(self.matrix)):
             print("")
-            if len(str(y))>1:
+            if len(str(y)) > 1:
                 print(y, end='')
             else:
                 print(str(y) + " ", end='')
@@ -62,6 +62,3 @@ class Map:
         if yco + 1 < len(self.matrix) and self.matrix[yco + 1][xco] == 0:
             neighbors.append((xco, yco + 1))
         return neighbors
-
-    def get_matrix(self):
-        return self.matrix
