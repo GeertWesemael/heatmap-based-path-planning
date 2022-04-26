@@ -6,80 +6,91 @@ import actor
 import world
 import astar
 import zone
+import heatmap
+from timefunct import random_time_between_
+import robot
 
-matrix_map1 = [[1, 1, 1, 0, 0, 1, 1, 1],
-               [1, 1, 1, 0, 0, 1, 1, 1],
-               [1, 1, 1, 0, 0, 1, 1, 1],
-               [0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0],
-               [1, 1, 1, 0, 0, 1, 1, 1],
-               [1, 1, 1, 0, 0, 1, 1, 1],
-               [1, 1, 1, 0, 0, 1, 1, 1]]
-
-map1 = map_.Map(matrix_map1)
-
-a_zone = zone.Zone("a","A", [(3,0),(4,0)])
-b_zone = zone.Zone("b","B",[(7,3),(7,4)])
-c_zone = zone.Zone("c","C", [(3,7),(4,7)])
-d_zone = zone.Zone("d","D", [(0,3),(0,4)])
-zones = [a_zone,b_zone,c_zone,d_zone]
-zone.print_zone(map1,zones)
-
-world1 = world.World(map1)
-
-actorA = actor.Actor.actor_at_zone(c_zone,0,map1)
-actorA.walk_to_zone(b_zone)
-# actorA.walk_to_zone(c_zone)
-# actorA.walk_to_zone(b_zone)
-# actorA.walk_to_zone(c_zone)
-# actorA.walk_to_zone(b_zone)
-# actorA.walk_to_zone(c_zone)
-# actorA.walk_to_zone(b_zone)
-# actorA.walk_to_zone(c_zone)
-actorA.plot_path()
-
-world1.add_actor(actorA)
-
-import seaborn as sns
-import matplotlib.pylab as plt
-from heatmap import heatmap
-
-data = heatmap(world1)
-ax = sns.heatmap(data, linewidth=0.5)
-plt.show()
-
-# def my_plotter(ax, data1, data2, param_dict):
-#     """
-#     A helper function to make a graph.
-#     """
-#     out = ax.plot(data1, data2, **param_dict)
-#     return out
+# matrix_map1 = [[0, 0, 0, 0, 0, 0, 1, 1],
+#                [0, 0, 1, 1, 0, 0, 0, 1],
+#                [0, 1, 0, 0, 0, 0, 0, 1],
+#                [0, 1, 0, 0, 0, 0, 0, 0],
+#                [0, 1, 0, 0, 0, 0, 0, 0],
+#                [0, 1, 0, 0, 0, 0, 0, 1],
+#                [0, 1, 1, 1, 0, 0, 0, 1],
+#                [0, 0, 0, 0, 0, 0, 1, 1]]
 #
-# data1, data2, data3, data4 = np.random.randn(4, 100)  # make 4 random data sets
-# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(5, 2.7))
-# my_plotter(ax1, data1, data2, {'marker': 'x'})
-# my_plotter(ax2, data3, data4, {'marker': 'o'});
-
-# actorA = actor.Actor.actor_at((1, 1), 1.5, map1)
-# actorA.walk_to((1, 6))
-# actorA.wait(5)
-# actorA.walk_to((6, 6))
-# actorA.wait_till(30)
-# actorA.walk_to((6, 2))
+# map1 = map_.Map(matrix_map1)
 #
-# actorB = actor.Actor.actor_at((2, 5), 50, map1)
-# actorB.walk_to_zone(b_zone)
-# actorB.wait(5)
-# actorB.walk_to_zone(c_zone)
-# actorB.wait_till(100)
-# actorB.walk_to_zone(zone.Zone.combined_zones(zones))
-# print(actorB.path.path_list)
-#
-# actorA.plot_path()
+# a_zone = zone.Zone("a","A", [(4,0),(5,0)])
+# b_zone = zone.Zone("b","B",[(7,3),(7,4)])
+# c_zone = zone.Zone("c","C", [(4,7),(5,7)])
+# d_zone = zone.Zone("d","D", [(2,2),(2,3),(2,4),(2,5),(3,2),(3,3),(3,4),(3,5)])
+# e_zone = zone.Zone("e","E",[(0,0)])
+# zones = [a_zone,b_zone,c_zone,d_zone,e_zone]
+# zone.print_zone(map1,zones)
 #
 # world1 = world.World(map1)
-# world1.add_actor(actorA)
-# world1.add_actor(actorB)
-# world1.plot_world()
 #
-# zone.print_zone(map1,zones)
+# for _ in range(10):
+#     actorA = actor.Actor.actor_at_zone(b_zone, random_time_between_(0,120), map1)
+#     actorA.walk_to_zone(d_zone)
+#     actorA.wait(random_time_between_(5,10))
+#     actorA.walk_to_zone(b_zone)
+#     world1.add_actor(actorA)
+#
+# for _ in range(10):
+#     actorA = actor.Actor.actor_at_zone(b_zone, random_time_between_(240,360), map1)
+#     actorA.walk_to_zone(d_zone)
+#     actorA.wait(random_time_between_(5,10))
+#     actorA.walk_to_zone(b_zone)
+#     world1.add_actor(actorA)
+#
+# for _ in range(10):
+#     actorA = actor.Actor.actor_at_zone(e_zone, random_time_between_(240,360), map1)
+#     actorA.walk_to_zone(d_zone)
+#     actorA.wait(random_time_between_(5,10))
+#     actorA.walk_to_zone(e_zone)
+#     world1.add_actor(actorA)
+
+matrix_map1 = [[0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0]]
+
+map1 = map_.Map(matrix_map1)
+world1 = world.World(map1)
+
+for _ in range(10):
+    actorA = actor.Actor.actor_at((0,0), random_time_between_(0,120), map1)
+    actorA.walk_to((7,7))
+#     actorA.wait(random_time_between_(5,10))
+#     actorA.walk_to((0,0))
+    world1.add_actor(actorA)
+#
+# for _ in range(10):
+#     actorA = actor.Actor.actor_at((0,4), random_time_between_(0,120), map1)
+#     actorA.walk_to((4,7))
+#     world1.add_actor(actorA)
+#
+# for _ in range(10):
+#     actorA = actor.Actor.actor_at((4,1),random_time_between_(0,120), map1)
+#     actorA.walk_to((7,1))
+#     world1.add_actor(actorA)
+
+heatm = heatmap.heatmap(world1)
+# heatmap.visualize_heatmap(heatm)
+# heatmap.heatmap2(world1)
+# heatmap.heatmap3(world1,0.1)
+heatmap.heatmap4(world1,sample_rate=0.1,scale=2)
+
+r = robot.Robot((4,7),0,map1)
+r.astar_path_plan((4,0))
+r.path.plot_path(map1)
+
+r2 = robot.Robot((4,7),0,map1)
+r2.weighted_astar_path_plan((4,0),heatm,0.04)
+r2.path.plot_path(map1)

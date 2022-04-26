@@ -138,8 +138,8 @@ class World:
 
         map_data = np.array(self.map_.get_locations_of(1))
         ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")
-        ax.set_xlim(0, len(self.map_.matrix[0]))
-        ax.set_ylim(0, len(self.map_.matrix))
+        ax.set_xlim(0, len(self.map_.matrix[0])-1)
+        ax.set_ylim(0, len(self.map_.matrix)-1)
         ax.set_aspect('equal', adjustable='datalim')
         plt.gca().invert_yaxis()
         plt.show()
