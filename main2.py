@@ -1,6 +1,5 @@
 import numpy as np
 import random
-
 import heatmap
 import map_
 import path
@@ -11,7 +10,6 @@ import astar
 import zone
 import createactors
 import matplotlib.pyplot as plt
-
 from timefunct import sec_to_hour, hour_min_to_sec
 
 # CREATE MAP
@@ -120,37 +118,58 @@ if val == "1":
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.astar_path_plan((1, 1))
-    r.path.plot_path(map1,"astar")
+    r.path.plot_path(map1, "astar")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 1)
-    r.path.plot_path(map1,"w-astar-1")
+    r.path.plot_path(map1, "w-astar-1")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.1)
-    r.path.plot_path(map1,"w-astar-0.1")
+    r.path.plot_path(map1, "w-astar-0.1")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.01)
-    r.path.plot_path(map1,"w-astar-0.01")
+    r.path.plot_path(map1, "w-astar-0.01")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.001)
-    r.path.plot_path(map1,"w-astar-0.001")
+    r.path.plot_path(map1, "w-astar-0.001")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-    r.weighted_astar_path_plan((1, 1), heatm, 0.0001) #switches path
-    r.path.plot_path(map1,"w-astar-0.0001")
+    r.weighted_astar_path_plan((1, 1), heatm, 0.0001)  # switches path
+    r.path.plot_path(map1, "w-astar-0.0001")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.00001)
-    r.path.plot_path(map1,"w-astar-0.00001")
+    r.path.plot_path(map1, "w-astar-0.00001")
 
 elif val == "2":
-    interval = hour_min_to_sec(0,30)
+    interval = hour_min_to_sec(0, 30)
     start = hour_min_to_sec(8, 30)
-    heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17,30), sample_rate=1, scale=1)
-    heatmap.animate_heatmaps(heatmaps,start,interval)
+    heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17, 30),
+                                                 sample_rate=1, scale=1)
+    heatmap.animate_heatmaps(heatmaps, start, interval)
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.path.plot_path(map1, "11:00")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(12, 5), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.path.plot_path(map1, "12:05")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(12, 35), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.path.plot_path(map1, "12:35")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(8, 50), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.path.plot_path(map1, "8:50")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(16, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.path.plot_path(map1, "16:00")
 
 
 else:

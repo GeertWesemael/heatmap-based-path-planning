@@ -91,8 +91,8 @@ def animate_heatmaps(heatmaps, start_time, interval):
         v_max = max_
 
     fig, ax = plt.subplots()
-    fig.set_figheight(7)
-    fig.set_figwidth(18)
+    fig.set_figheight(5)
+    fig.set_figwidth(12)
     for i in range(len(heatmaps)):
         ax.cla()
         im = ax.imshow(heatmaps[i], vmin=v_min, vmax=v_max, aspect='auto', cmap="magma")

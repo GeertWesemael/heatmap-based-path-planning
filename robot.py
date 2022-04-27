@@ -26,3 +26,14 @@ class Robot:
         new_path = astar.path_to_path_object(astar.weighted_a_star(self.map_, last_co, destination, heatmap, factor),
                                              last_time)
         self.path.add_to_path_safe(new_path)
+
+    def weighted_astar_path_plan_timeframes(self, destination, heatmaps,start, interval, factor):
+        i = start
+        a = 0
+        while i < self.path.get_end_time():
+            a += 1
+            i += interval
+        a -= 1
+        heatmap = heatmaps[a]
+
+        return self.weighted_astar_path_plan(destination,heatmap,factor)

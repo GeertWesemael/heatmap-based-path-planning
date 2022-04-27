@@ -8,7 +8,6 @@ from matplotlib.path import Path as Pathmatplotlib
 import matplotlib.patches as patches
 
 
-
 # consists of the locations an actor is at all timeframes
 def lin_interpol(y1, y2, x1, x2, x):
     return y1 + (x - x1) * ((y2 - y1) / (x2 - x1))
