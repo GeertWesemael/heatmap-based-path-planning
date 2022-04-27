@@ -47,10 +47,64 @@ def actor_with_job(job, mapp, zones):
         a.walk_to_zone(door)
 
         return a
-    # if (job == "receiver"):
-    # if (job == "packer"):
-    # if (job == "forklift"):
-    # if (job == "shipper"):
+
+    else:
+        active = True  # movement within zone
+        if job == "receiver":
+            profession_zone = inbo
+        elif job == "packer":
+            profession_zone = pack
+            active = False
+        elif job == "forklift":
+            profession_zone = stor
+        elif job == "shipper":
+            profession_zone = outb
+        else:
+            raise Exception("unknown profession added")
+
+        arrive_time = random_time_between(8, 45, 8, 58)
+        start_time = random_time_between(8, 58, 9, 59)
+        break_time_start = random_time_between(11, 55, 12, 15)
+        break_time_end = random_time_between(12, 55, 13, 15)
+        end_time = random_time_between(17, 00, 17, 10)
+
+        # enter / coffee
+        a = actor.Actor.actor_at_zone(door, arrive_time, mapp)
+        a.walk_to_zone(laun)
+        a.wait_till(start_time)
+        a.walk_to_zone(profession_zone)
+
+        # first work shift
+        while a.path.get_end_time() < break_time_start:
+            a.walk_to_zone(profession_zone)
+            r = random_time_between(0, 30, 1, 0)
+            if active:
+                r = random_time_between_(10, 300)
+            if a.path.get_end_time() + r >= break_time_start:
+                a.wait_till(break_time_start + 10)
+            else:
+                a.wait(r)
+
+        # lunch break
+        a.walk_to_zone(laun)
+        a.wait_till(break_time_end)
+        a.walk_to_zone(profession_zone)
+
+        # second work shift
+        while a.path.get_end_time() < end_time:
+            a.walk_to_zone(profession_zone)
+            r = random_time_between(0, 30, 1, 0)
+            if active:
+                r = random_time_between_(10, 300)
+            if a.path.get_end_time() + r >= end_time:
+                a.wait_till(end_time + 10)
+            else:
+                a.wait(r)
+
+        # end of working day
+        a.walk_to_zone(door)
+
+        return a
 
 
 def decision(probability):

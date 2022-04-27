@@ -4,6 +4,8 @@ from timefunct import sec_to_hour_min_string, sec_to_hour
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+from matplotlib.path import Path as Pathmatplotlib
+import matplotlib.patches as patches
 
 
 # consists of the locations an actor is at all timeframes
@@ -136,7 +138,7 @@ class Path:
 
         x = data[:, 0]
         y = data[:, 1]
-        cols = list(self.keys) #map(sec_to_hour,
+        cols = list(self.keys)  # map(sec_to_hour,
 
         points = np.array([x, y]).T.reshape(-1, 1, 2)
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
@@ -146,11 +148,33 @@ class Path:
         lc.set_linewidth(2)
         line = ax.add_collection(lc)
         fig.colorbar(line, ax=ax)
-
         map_data = np.array(map_.get_locations_of(1))
-        ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")
-        ax.set_xlim(0, len(map_.matrix[0])-1)
-        ax.set_ylim(0, len(map_.matrix)-1)
+
+        codes = [
+            Pathmatplotlib.MOVETO,
+            Pathmatplotlib.LINETO,
+            Pathmatplotlib.LINETO,
+            Pathmatplotlib.LINETO,
+            Pathmatplotlib.CLOSEPOLY,
+        ]
+        for i in map_data:
+            (y, x) = i
+            verts = [
+                (x-0.5, y+0.5),
+                (x-0.5, y-0.5),
+                (x+0.5, y-0.5),
+                (x+0.5, y+0.5),
+                (x-0.5, y+0.5),
+            ]
+            pa = Pathmatplotlib(verts, codes)
+            patch = patches.PathPatch(pa, facecolor='black', lw=0)
+            ax.add_patch(patch)
+
+        # if len(map_data) != 0:
+        #     ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")
+
+        ax.set_xlim(0, len(map_.matrix[0]) - 1)
+        ax.set_ylim(0, len(map_.matrix) - 1)
         ax.set_aspect('equal', adjustable='datalim')
         plt.gca().invert_yaxis()
         plt.show()

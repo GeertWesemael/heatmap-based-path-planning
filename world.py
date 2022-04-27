@@ -2,6 +2,8 @@ import numpy as np
 from matplotlib.collections import LineCollection
 from timefunct import sec_to_hour_min_string, sec_to_hour
 import matplotlib.pyplot as plt
+from matplotlib.path import Path as Pathmatplotlib
+import matplotlib.patches as patches
 
 abc = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -137,7 +139,30 @@ class World:
         fig.colorbar(line, ax=ax)
 
         map_data = np.array(self.map_.get_locations_of(1))
-        ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")
+
+        codes = [
+            Pathmatplotlib.MOVETO,
+            Pathmatplotlib.LINETO,
+            Pathmatplotlib.LINETO,
+            Pathmatplotlib.LINETO,
+            Pathmatplotlib.CLOSEPOLY,
+        ]
+        for i in map_data:
+            (y, x) = i
+            verts = [
+                (x-0.5, y+0.5),
+                (x-0.5, y-0.5),
+                (x+0.5, y-0.5),
+                (x+0.5, y+0.5),
+                (x-0.5, y+0.5),
+            ]
+            pa = Pathmatplotlib(verts, codes)
+            patch = patches.PathPatch(pa, facecolor='black', lw=0)
+            ax.add_patch(patch)
+
+        # if len(map_data) != 0:
+        #     ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")
+
         ax.set_xlim(0, len(self.map_.matrix[0])-1)
         ax.set_ylim(0, len(self.map_.matrix)-1)
         ax.set_aspect('equal', adjustable='datalim')
