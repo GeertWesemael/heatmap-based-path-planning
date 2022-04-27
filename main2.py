@@ -113,8 +113,8 @@ world1.plot_world()
 # PRINT HEATMAP
 val = input("What codeblock do you want to run? ")
 if val == "1":
-    heatm = heatmap.heatmap(world1, sample_rate=1, scale=1)
-    heatmap.visualize_heatmap(heatm)
+    heatm = heatmap.Heatmap(world1, sample_rate=1, scale=1)
+    heatm.visualize_heatmap()
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.astar_path_plan((1, 1))
@@ -149,28 +149,27 @@ elif val == "2":
     start = hour_min_to_sec(8, 30)
     heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17, 30),
                                                  sample_rate=1, scale=1)
-    heatmap.animate_heatmaps(heatmaps, start, interval)
+    heatmap.animate_heatmaps(heatmaps)
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
     r.path.plot_path(map1, "11:00")
 
     r = robot.Robot((31, 18), hour_min_to_sec(12, 5), map1)
-    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
     r.path.plot_path(map1, "12:05")
 
     r = robot.Robot((31, 18), hour_min_to_sec(12, 35), map1)
-    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
     r.path.plot_path(map1, "12:35")
 
     r = robot.Robot((31, 18), hour_min_to_sec(8, 50), map1)
-    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
     r.path.plot_path(map1, "8:50")
 
     r = robot.Robot((31, 18), hour_min_to_sec(16, 0), map1)
-    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,start,interval,1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
     r.path.plot_path(map1, "16:00")
-
 
 else:
     print("Option not available")

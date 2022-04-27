@@ -64,8 +64,7 @@ def a_star(map, start_co, end_co, distance=1):
 
 def weighted_a_star(map, start_co, end_co, heatmap, factor):
     def weight(coord, hm, f):
-        (x, y) = coord
-        return hm[y][x] * f
+        return hm.get_value_at(coord) * f
 
     f_score = 0 + h_cost(start_co, end_co)
     open_list = [(f_score, start_co)]

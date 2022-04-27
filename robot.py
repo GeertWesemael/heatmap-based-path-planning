@@ -1,5 +1,6 @@
 import astar
 import path
+import heatmap
 
 
 class Robot:
@@ -27,13 +28,8 @@ class Robot:
                                              last_time)
         self.path.add_to_path_safe(new_path)
 
-    def weighted_astar_path_plan_timeframes(self, destination, heatmaps,start, interval, factor):
-        i = start
-        a = 0
-        while i < self.path.get_end_time():
-            a += 1
-            i += interval
-        a -= 1
-        heatmap = heatmaps[a]
-
-        return self.weighted_astar_path_plan(destination,heatmap,factor)
+    def weighted_astar_path_plan_timeframes(self, destination, heatmaps, factor):
+        start = self.path.get_end_time()
+        for i in heatmaps:
+            if i.start_time <= start < i.end_time:
+                return self.weighted_astar_path_plan(destination, i, factor)
