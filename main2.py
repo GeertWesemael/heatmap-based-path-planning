@@ -113,30 +113,45 @@ world1.add_actor(shipper)
 world1.plot_world()
 
 # PRINT HEATMAP
-# heatm = heatmap.heatmap(world1,start_time=hour_min_to_sec(14,0),end_time=hour_min_to_sec(15,0), sample_rate=0.1, scale=1)
-heatm = heatmap.heatmap(world1, sample_rate=1, scale=1)
-heatmap.visualize_heatmap(heatm)
+val = input("What codeblock do you want to run? ")
+if val == "1":
+    heatm = heatmap.heatmap(world1, sample_rate=1, scale=1)
+    heatmap.visualize_heatmap(heatm)
 
-r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-r.astar_path_plan((1, 1))
-r.path.plot_path(map1)
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.astar_path_plan((1, 1))
+    r.path.plot_path(map1,"astar")
 
-r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-r.weighted_astar_path_plan((1, 1), heatm, 1)
-r.path.plot_path(map1)
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 1)
+    r.path.plot_path(map1,"w-astar-1")
 
-r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-r.weighted_astar_path_plan((1, 1), heatm, 0.01)
-r.path.plot_path(map1)
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 0.1)
+    r.path.plot_path(map1,"w-astar-0.1")
 
-r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-r.weighted_astar_path_plan((1, 1), heatm, 0.001)
-r.path.plot_path(map1)
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 0.01)
+    r.path.plot_path(map1,"w-astar-0.01")
 
-r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-r.weighted_astar_path_plan((1, 1), heatm, 0.0001) #switches path
-r.path.plot_path(map1)
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 0.001)
+    r.path.plot_path(map1,"w-astar-0.001")
 
-r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
-r.weighted_astar_path_plan((1, 1), heatm, 0.00001)
-r.path.plot_path(map1)
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 0.0001) #switches path
+    r.path.plot_path(map1,"w-astar-0.0001")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 0.00001)
+    r.path.plot_path(map1,"w-astar-0.00001")
+
+elif val == "2":
+    interval = hour_min_to_sec(0,30)
+    start = hour_min_to_sec(8, 30)
+    heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17,30), sample_rate=1, scale=1)
+    heatmap.animate_heatmaps(heatmaps,start,interval)
+
+
+else:
+    print("Option not available")

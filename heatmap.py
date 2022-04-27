@@ -6,6 +6,7 @@ import map_
 import numpy as np
 import seaborn as sns
 import matplotlib.pylab as plt
+from timefunct import sec_to_hour_min_string
 
 
 def heatmap(world, start_time=None, end_time=None, sample_rate=1, scale=1):
@@ -65,6 +66,49 @@ def heatmap(world, start_time=None, end_time=None, sample_rate=1, scale=1):
     return hm
 
 
+def heatmap_for_each_interval(world, interval, start_time, end_time, sample_rate=1, scale=1):
+    heatmaps = []
+    t = start_time
+    while t < end_time:
+        heatmaps.append(heatmap(world, t, t + interval, sample_rate, scale))
+        t += interval
+    return heatmaps
+
+
 def visualize_heatmap(heatmap):
-    ax = sns.heatmap(heatmap, linewidth=0.5, annot=True)
+    ax = sns.heatmap(heatmap, linewidth=0.5, annot=True, annot_kws={"size": 6})
     plt.show()
+
+
+def animate_heatmaps(heatmaps, start_time, interval):
+    v_min = 999999999999
+    v_max = 0
+    max_ = np.amax(np.array(heatmaps))
+    min_ = np.amin(np.array(heatmaps))
+    if min_ < v_min:
+        v_min = min_
+    if max_ > v_max:
+        v_max = max_
+
+    fig, ax = plt.subplots()
+    fig.set_figheight(7)
+    fig.set_figwidth(18)
+    for i in range(len(heatmaps)):
+        ax.cla()
+        im = ax.imshow(heatmaps[i], vmin=v_min, vmax=v_max, aspect='auto', cmap="magma")
+        cb = ax.figure.colorbar(im, ax=ax)
+        ax.set_title("from {}".format(str(sec_to_hour_min_string(start_time + i * interval)) + " to " + str(
+            sec_to_hour_min_string(start_time + i * interval + interval))))
+        for y in range(len(heatmaps[i])):
+            for x in range(len(heatmaps[i][0])):
+                number = heatmaps[i][y][x]
+                if (number).is_integer:
+                    number = int(number)
+                if len(str(number)) > 4:
+                    number = "__"
+                else:
+                    number = str(number)
+                text = ax.text(x, y, number, ha="center", va="center", color="w", fontsize="x-small")
+        plt.pause(1)
+        plt.tight_layout()
+        cb.remove()

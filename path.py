@@ -8,6 +8,7 @@ from matplotlib.path import Path as Pathmatplotlib
 import matplotlib.patches as patches
 
 
+
 # consists of the locations an actor is at all timeframes
 def lin_interpol(y1, y2, x1, x2, x):
     return y1 + (x - x1) * ((y2 - y1) / (x2 - x1))
@@ -132,7 +133,7 @@ class Path:
                     print(" __", end='')
         print("")
 
-    def plot_path(self, map_):
+    def plot_path(self, map_,title=None):
         fig, ax = plt.subplots()
         data = np.copy(np.array(self.values))
 
@@ -176,5 +177,7 @@ class Path:
         ax.set_xlim(0, len(map_.matrix[0]) - 1)
         ax.set_ylim(0, len(map_.matrix) - 1)
         ax.set_aspect('equal', adjustable='datalim')
+        if title is not None:
+            ax.set_title(title)
         plt.gca().invert_yaxis()
         plt.show()
