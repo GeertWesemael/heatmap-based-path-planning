@@ -132,7 +132,7 @@ class Path:
                     print(" __", end='')
         print("")
 
-    def plot_path(self, map_,title=None):
+    def plot_path(self, map_, title=None):
         fig, ax = plt.subplots()
         data = np.copy(np.array(self.values))
 
@@ -160,11 +160,11 @@ class Path:
         for i in map_data:
             (y, x) = i
             verts = [
-                (x-0.5, y+0.5),
-                (x-0.5, y-0.5),
-                (x+0.5, y-0.5),
-                (x+0.5, y+0.5),
-                (x-0.5, y+0.5),
+                (x - 0.5, y + 0.5),
+                (x - 0.5, y - 0.5),
+                (x + 0.5, y - 0.5),
+                (x + 0.5, y + 0.5),
+                (x - 0.5, y + 0.5),
             ]
             pa = Pathmatplotlib(verts, codes)
             patch = patches.PathPatch(pa, facecolor='black', lw=0)
@@ -180,3 +180,16 @@ class Path:
             ax.set_title(title)
         plt.gca().invert_yaxis()
         plt.show()
+
+    def get_price(self, heatmap):
+        total_price = 0
+        for i in self.values:
+            total_price += heatmap.get_value_at(i)
+        return total_price
+
+    def get_time(self):
+        return self.get_end_time() - self.get_start_time()
+
+    def print_stats(self, heatmap):
+        print("duration of path = " + str(self.get_time()))
+        print("price of path in given heatmap = " + str(self.get_price(heatmap)))

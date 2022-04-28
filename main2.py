@@ -118,30 +118,47 @@ if val == "1":
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.astar_path_plan((1, 1))
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "astar")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 100)
+    r.path.print_stats(heatm)
+    r.path.plot_path(map1, "w-astar-100")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 10)
+    r.path.print_stats(heatm)
+    r.path.plot_path(map1, "w-astar-10")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 1)
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "w-astar-1")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.1)
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "w-astar-0.1")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.01)
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "w-astar-0.01")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.001)
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "w-astar-0.001")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.0001)  # switches path
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "w-astar-0.0001")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan((1, 1), heatm, 0.00001)
+    r.path.print_stats(heatm)
     r.path.plot_path(map1, "w-astar-0.00001")
 
 elif val == "2":
