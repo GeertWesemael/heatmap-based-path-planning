@@ -99,20 +99,24 @@ zone.print_zone(map1, [all_zones])
 
 # CREATE WORLD & ACTORS
 world1 = world.World(map1)
-receiver = createactors.actor_with_job("receiver", map1, zones)
-packer = createactors.actor_with_job("packer", map1, zones)
-forklift = createactors.actor_with_job("forklift", map1, zones)
-shipper = createactors.actor_with_job("shipper", map1, zones)
 
-world1.add_actor(receiver)
-world1.add_actor(packer)
-world1.add_actor(forklift)
-world1.add_actor(shipper)
+for _ in range(5):
+
+    receiver = createactors.actor_with_job("receiver", map1, zones)
+    packer = createactors.actor_with_job("packer", map1, zones)
+    forklift = createactors.actor_with_job("forklift", map1, zones)
+    shipper = createactors.actor_with_job("shipper", map1, zones)
+    world1.add_actor(receiver)
+    world1.add_actor(packer)
+    world1.add_actor(forklift)
+    world1.add_actor(shipper)
+
 world1.plot_world()
 
 # PRINT HEATMAP
 val = input("What codeblock do you want to run? ")
 if val == "1":
+    print("test different weight-factors")
     heatm = heatmap.Heatmap(world1, sample_rate=1, scale=1)
     heatm.visualize_heatmap()
 
@@ -162,6 +166,7 @@ if val == "1":
     r.path.plot_path(map1, "w-astar-0.00001")
 
 elif val == "2":
+    print("test timeframe selective heatmaps")
     interval = hour_min_to_sec(0, 30)
     start = hour_min_to_sec(8, 30)
     heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17, 30),
@@ -186,6 +191,61 @@ elif val == "2":
 
     r = robot.Robot((31, 18), hour_min_to_sec(16, 0), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
+    r.path.plot_path(map1, "16:00")
+
+elif val == "3":
+    print("test each if it reduces the amount of collisions")
+    heatm = heatmap.Heatmap(world1, sample_rate=1, scale=1)
+    heatm.visualize_heatmap()
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 100)
+    r.path.print_stats(heatm)
+    r.evaluate_collisions(world1,0.1,2)
+    r.path.plot_path(map1, "w-astar-100")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan((1, 1), heatm, 0.0001)
+    r.path.print_stats(heatm)
+    r.evaluate_collisions(world1,0.1,2)
+    r.path.plot_path(map1, "w-astar-0.0001")
+
+elif val == "4":
+    print("test timeframe selective heatmaps reduces the amount of collisions")
+    interval = hour_min_to_sec(0, 30)
+    start = hour_min_to_sec(8, 30)
+    heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17, 30),
+                                                 sample_rate=1, scale=1)
+    heatmap.animate_heatmaps(heatmaps)
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
+    r.evaluate_collisions(world1, 0.1, 2)
+    r.path.plot_path(map1, "11:00 - 1")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,0.0001)
+    r.evaluate_collisions(world1, 0.1, 2)
+    r.path.plot_path(map1, "11:00 - 0.0001")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(12, 5), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
+    r.evaluate_collisions(world1, 0.1, 2)
+    r.path.plot_path(map1, "12:05")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(12, 35), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
+    r.evaluate_collisions(world1, 0.1, 2)
+    r.path.plot_path(map1, "12:35")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(8, 50), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
+    r.evaluate_collisions(world1, 0.1, 2)
+    r.path.plot_path(map1, "8:50")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(16, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
+    r.evaluate_collisions(world1, 0.1, 2)
     r.path.plot_path(map1, "16:00")
 
 else:

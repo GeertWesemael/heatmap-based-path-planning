@@ -34,7 +34,8 @@ class Actor:
     def wait_till(self, time):
         last_time = self.path.get_end_time()
         if time < last_time:
-            raise Exception("path that passes waiting moment is present")
+            self.path.print_path(self.map_)
+            raise Exception("path that passes waiting moment is present, wait till: "+str(time)+" , last_time in path: " +str(last_time)+" , path printed above ")
         last_co = self.path.get_end_location()
         waiting_path = path.Path.stand_still(last_time, time, last_co)
         self.path.add_to_path_safe(waiting_path)

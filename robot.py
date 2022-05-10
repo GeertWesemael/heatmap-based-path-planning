@@ -1,6 +1,8 @@
 import astar
 import path
 import heatmap
+import actor
+import math
 
 
 class Robot:
@@ -33,3 +35,21 @@ class Robot:
         for i in heatmaps:
             if i.start_time <= start < i.end_time:
                 return self.weighted_astar_path_plan(destination, i, factor)
+
+    def evaluate_collisions(self,world,sample_rate,distance=1):
+        collisions = 0
+        t = self.path.get_start_time()
+        while t < self.path.get_end_time():
+            robot_loc = self.path.get_location_at(t)
+            for a in world.actors:
+                actor_loc = a.path.get_location_at(t)
+                if actor_loc is not None and euclidian_distance(robot_loc, actor_loc)<=distance:
+                    collisions += 1
+            t = t + sample_rate
+        print("amount of collisions = " + str(collisions))
+
+
+def euclidian_distance(coord1,coord2):
+    (x1,y1) = coord1
+    (x2,y2) = coord2
+    return math.sqrt(math.pow(x2-x1,2)+math.pow(y2-y1,2))
