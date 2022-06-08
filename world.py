@@ -118,7 +118,7 @@ class World:
     #             print("\nworld at time " + sec_to_hour_min_string(t) + " :\n" + print_string)
     #         last_print = print_string
 
-    def plot_world(self):
+    def plot_world(self,showborders = False):
         if len(self.actors) == 0:
             raise Exception("No Actors in this world")
         fig, ax = plt.subplots()
@@ -139,6 +139,7 @@ class World:
         fig.colorbar(line, ax=ax)
 
         map_data = np.array(self.map_.get_locations_of(1))
+        map_data_borders = np.array(self.map_.get_location_of_borders())
 
         codes = [
             Pathmatplotlib.MOVETO,
@@ -147,6 +148,7 @@ class World:
             Pathmatplotlib.LINETO,
             Pathmatplotlib.CLOSEPOLY,
         ]
+        #black
         for i in map_data:
             (y, x) = i
             verts = [
@@ -159,6 +161,20 @@ class World:
             pa = Pathmatplotlib(verts, codes)
             patch = patches.PathPatch(pa, facecolor='black', lw=0)
             ax.add_patch(patch)
+        #gray
+        if showborders:
+            for i in map_data_borders:
+                (y, x) = i
+                verts = [
+                    (x-0.5, y+0.5),
+                    (x-0.5, y-0.5),
+                    (x+0.5, y-0.5),
+                    (x+0.5, y+0.5),
+                    (x-0.5, y+0.5),
+                ]
+                pa = Pathmatplotlib(verts, codes)
+                patch = patches.PathPatch(pa, facecolor='grey', lw=0)
+                ax.add_patch(patch)
 
         # if len(map_data) != 0:
         #     ax.scatter(map_data[:, 1], map_data[:, 0], marker="s")

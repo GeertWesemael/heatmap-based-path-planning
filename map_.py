@@ -37,6 +37,16 @@ class Map:
                 locations.append((x, y))
         return locations
 
+    def get_location_of_borders(self):
+        locations = []
+        numpy_matrix = np.matrix(self.get_borders())
+        for x in range(len(numpy_matrix)):
+            i = numpy_matrix[x]
+            j = np.where(i == 1)[1]
+            for y in j:
+                locations.append((x, y))
+        return locations
+
     # def get_neighbors_coordinates(self, coordinate):
     #     neighbors = []
     #     (xco, yco) = coordinate
