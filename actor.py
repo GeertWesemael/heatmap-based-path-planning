@@ -26,7 +26,7 @@ class Actor:
         if int(coordinate[0]) == coordinate[0] and int(coordinate[1]) == coordinate[1]:
             last_co = self.path.get_end_location()
             last_time = self.path.get_end_time()
-            new_path = astar.path_to_path_object(astar.a_star(self.map_, last_co, coordinate), last_time)
+            new_path = astar.path_to_path_object(astar.a_star_hallways(self.map_, last_co, coordinate), last_time)
             self.path.add_to_path_safe(new_path)
         else:
             raise Exception("can't give float coord to astar")

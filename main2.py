@@ -220,32 +220,32 @@ elif val == "4":
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
-    r.evaluate_collisions(world1, 0.1, 2)
+    r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "11:00 - 1")
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,0.0001)
-    r.evaluate_collisions(world1, 0.1, 2)
+    r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "11:00 - 0.0001")
 
     r = robot.Robot((31, 18), hour_min_to_sec(12, 5), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
-    r.evaluate_collisions(world1, 0.1, 2)
+    r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "12:05")
 
     r = robot.Robot((31, 18), hour_min_to_sec(12, 35), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
-    r.evaluate_collisions(world1, 0.1, 2)
+    r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "12:35")
 
     r = robot.Robot((31, 18), hour_min_to_sec(8, 50), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
-    r.evaluate_collisions(world1, 0.1, 2)
+    r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "8:50")
 
     r = robot.Robot((31, 18), hour_min_to_sec(16, 0), map1)
     r.weighted_astar_path_plan_timeframes((1,1),heatmaps,1)
-    r.evaluate_collisions(world1, 0.1, 2)
+    r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "16:00")
 
 else:

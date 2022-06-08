@@ -30,7 +30,7 @@ def reconstruct_path(came_from, current_co):
     return final_path
 
 
-def a_star(map, start_co, end_co, distance=1):
+def a_star(map, start_co, end_co):
     f_score = 0 + h_cost(start_co, end_co)
     open_list = [(f_score, start_co)]
     heapq.heapify(open_list)
@@ -51,6 +51,41 @@ def a_star(map, start_co, end_co, distance=1):
         for i in get_neighbors(current_co, map):
             (neighbor_co, distance) = i
             new_g_score = g_score[current_co] + distance
+            print(current_co)
+            print(distance)
+            if new_g_score < g_score[neighbor_co]:
+                came_from[neighbor_co] = current_co
+                g_score[neighbor_co] = new_g_score
+                new_f_score = new_g_score + h_cost(neighbor_co, end_co)
+                f_score[neighbor_co] = new_f_score
+
+                if neighbor_co not in open_list:
+                    heapq.heappush(open_list, (new_f_score, neighbor_co))
+    print("Error: goal never reached")
+
+def a_star_hallways(map, start_co, end_co):
+    borders = map.get_borders()
+
+    f_score = 0 + h_cost(start_co, end_co)
+    open_list = [(f_score, start_co)]
+    heapq.heapify(open_list)
+
+    came_from = {}
+
+    g_score = defaultdict(lambda: 1000000000)
+    g_score[start_co] = 0
+
+    f_score = defaultdict(lambda: 1000000000)
+    f_score[start_co] = h_cost(start_co, end_co)
+
+    while len(open_list) != 0:
+        (f_score_current, current_co) = heapq.heappop(open_list)
+        if current_co == end_co:
+            return reconstruct_path(came_from, current_co)
+
+        for i in get_neighbors(current_co, map):
+            (neighbor_co, distance) = i
+            new_g_score = g_score[current_co] + distance + 2*borders[neighbor_co[1]][neighbor_co[0]]
             if new_g_score < g_score[neighbor_co]:
                 came_from[neighbor_co] = current_co
                 g_score[neighbor_co] = new_g_score

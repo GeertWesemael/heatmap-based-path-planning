@@ -77,3 +77,38 @@ class Map:
             neighbors.append(((xco - 1, yco + 1),distance))
 
         return neighbors
+
+    ######
+    #
+    # i-1 j-1      i-1   j      i-1 j+1
+    # i   j-1      i     j      i   j+1s
+    # i+1 j-1      i+1   j      i+1 j+1
+    #
+    def get_borders(self):
+        m = self.matrix
+        new_m = np.zeros(np.array(m).shape)
+        for i in range(len(m)):
+            for j in range(len(m[0])):
+                if m[i][j] == 1:
+                    new_m[i][j] = 1
+                    if i != 0:
+                        new_m[i - 1][j] = 1
+                        if j != 0:
+                            new_m[i - 1][j - 1] = 1
+                        if j != len(m[0]) - 1:
+                            new_m[i - 1][j + 1] = 1
+                    if i != len(m) - 1:
+                        new_m[i + 1][j] = 1
+                        if j != 0:
+                            new_m[i + 1][j - 1] = 1
+                        if j != len(m[0]) - 1:
+                            new_m[i + 1][j + 1] = 1
+                    if j != 0:
+                        new_m[i][j - 1] = 1
+                    if j != len(m[0]) - 1:
+                        new_m[i][j + 1] = 1
+        for i in range(len(m)):
+            for j in range(len(m[0])):
+                if new_m[i][j] == m[i][j]:
+                    new_m[i][j] = 0
+        return new_m
