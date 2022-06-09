@@ -46,6 +46,9 @@ def actor_with_job(job, mapp, zones):
         a.wait_till(random_time_between(16, 30, 17, 30))
         a.walk_to_zone(door)
 
+        #add noise to walking path
+        a.path.add_noise_to_path(0.5,mapp)
+
         return a
 
     else:
@@ -99,6 +102,9 @@ def actor_with_job(job, mapp, zones):
 
         # end of working day
         a.walk_to_zone(door)
+
+        #add noise to walking path
+        a.path.add_noise_to_path(0.5,mapp)
 
         return a
 

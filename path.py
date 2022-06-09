@@ -13,6 +13,24 @@ def lin_interpol(y1, y2, x1, x2, x):
     return y1 + (x - x1) * ((y2 - y1) / (x2 - x1))
 
 
+def add_noise_to_point(coord, radius, map):
+    if radius <= 0.5:
+        r = radius * math.sqrt(random.uniform(0, 1))
+        theta = random.uniform(0, 1) * 2 * math.pi
+        x = coord[0] + r * math.cos(theta)
+        y = coord[1] + r * math.sin(theta)
+        return (x,y)
+    else:
+        x= None
+        y= None
+        while x is None or y is None or round(y)>=len(map.matrix) or round(x)>=len(map.matrix[0]) or round(x)<0 or round(y)<0 or map.matrix[round(y)][round(x)] == 1:
+            r = radius * math.sqrt(random.uniform(0,1))
+            theta = random.uniform(0,1) * 2 * math.pi
+            x = coord[0] + r * math.cos(theta)
+            y = coord[1] + r * math.sin(theta)
+        return (x,y)
+
+
 class Path:
     def __init__(self, path_dict):
         if len(path_dict) == 0:
@@ -193,3 +211,9 @@ class Path:
     def print_stats(self, heatmap):
         print("duration of path = " + str(self.get_time()))
         print("price of path in given heatmap = " + str(self.get_price(heatmap)))
+
+    def add_noise_to_path(self,radius,map):
+        for i in self.path_list:
+            self.path_list[i] = add_noise_to_point(self.path_list[i],radius,map)
+        self.keys = list(self.path_list)
+        self.values = list(self.path_list.values())
