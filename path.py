@@ -217,3 +217,62 @@ class Path:
             self.path_list[i] = add_noise_to_point(self.path_list[i],radius,map)
         self.keys = list(self.path_list)
         self.values = list(self.path_list.values())
+
+    def insert_waiting(self,time,sec):
+        loc = self.get_location_at(time)
+        if time in self.path_list:
+            array_ = np.array(self.keys)
+            above = array_[array_ > time]
+
+            # save in separate list times + waiting period
+            new_keys = []
+            new_values = []
+            for i in above:
+                new_keys.append(i+sec)
+                new_values.append(self.path_list[i])
+                del self.path_list[i]
+
+            # add location at time + sec at same position
+            self.path_list[time+sec] = loc
+
+            # add separate list to dict
+            for j in range(len(new_keys)):
+                self.path_list[new_keys[j]] = new_values[j]
+
+        elif time < self.get_start_time() or self.get_end_time() < time:
+            raise Exception("Current time is not in path")
+        else:
+            # the smallest element of self.keys greater than timeframe
+            array_ = np.array(self.keys)
+            above = array_[array_ > time].min()
+            above_loc = self.path_list[above]
+
+            # the largest element of self.keys less than timeframe
+            below = array_[array_ < time].max()
+            below_loc = self.path_list[below]
+
+            loc = above_loc
+            if above_loc != below_loc:
+                # linear interpolation
+                xco = lin_interpol(below_loc[0], above_loc[0], below, above, time)
+                yco = lin_interpol(below_loc[1], above_loc[1], below, above, time)
+                loc = (xco, yco)
+
+            array_ = np.array(self.keys)
+            above = array_[array_ > time]
+
+            new_keys = []
+            new_values = []
+            for i in above:
+                new_keys.append(i + sec)
+                new_values.append(self.path_list[i])
+                del self.path_list[i]
+
+            self.path_list[time] = loc
+            self.path_list[time+sec] = loc
+
+            for j in range(len(new_keys)):
+                self.path_list[new_keys[j]] = new_values[j]
+
+        self.keys = list(self.path_list)
+        self.values = list(self.path_list.values())

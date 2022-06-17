@@ -118,25 +118,56 @@ class World:
     #             print("\nworld at time " + sec_to_hour_min_string(t) + " :\n" + print_string)
     #         last_print = print_string
 
-    def plot_world(self,showborders = False):
+    def plot_world(self,showborders = False,robots = None, fr = None, to = None):
         if len(self.actors) == 0:
             raise Exception("No Actors in this world")
         fig, ax = plt.subplots()
+
+        #add actors
         for a in self.actors:
             data = np.array(a.path.values)
 
             x = data[:, 0]
             y = data[:, 1]
-            cols = list(map(sec_to_hour, a.path.keys)) + [8,18]
+
+            if fr is not None and to is not None:
+                cols = list(a.path.keys) + [fr, to]
+                print("be aware: any instances outside of fr/to will give a wrong visualization")
+            else:
+                cols = list(map(sec_to_hour, a.path.keys)) + [8,18]
 
             points = np.array([x, y]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
-            lc = LineCollection(segments, cmap='rainbow')
+            lc = LineCollection(segments, cmap='magma')
             lc.set_array(cols)
             lc.set_linewidth(2)
             line = ax.add_collection(lc)
         fig.colorbar(line, ax=ax)
+
+        #add robots if i added one
+        if robots is not None:
+            for r in robots:
+                data = np.array(r.path.values)
+
+                x = data[:, 0]
+                y = data[:, 1]
+
+                if fr is not None and to is not None:
+                    cols = list(r.path.keys) + [fr,to]
+                    print("be aware: any instances outside of fr/to will give a wrong visualization")
+                else:
+                    cols = list(map(sec_to_hour, r.path.keys)) + [8, 18]
+
+                points = np.array([x, y]).T.reshape(-1, 1, 2)
+                segments = np.concatenate([points[:-1], points[1:]], axis=1)
+
+                lc = LineCollection(segments, cmap='viridis')
+                lc.set_array(cols)
+                lc.set_linewidth(4)
+                line = ax.add_collection(lc)
+                print(cols)
+            fig.colorbar(line, ax=ax)
 
         map_data = np.array(self.map_.get_locations_of(1))
         map_data_borders = np.array(self.map_.get_location_of_borders())

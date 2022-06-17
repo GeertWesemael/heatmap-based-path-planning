@@ -51,8 +51,6 @@ def a_star(map, start_co, end_co):
         for i in get_neighbors(current_co, map):
             (neighbor_co, distance) = i
             new_g_score = g_score[current_co] + distance
-            print(current_co)
-            print(distance)
             if new_g_score < g_score[neighbor_co]:
                 came_from[neighbor_co] = current_co
                 g_score[neighbor_co] = new_g_score

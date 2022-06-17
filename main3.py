@@ -3,6 +3,7 @@ import random
 import map_
 import path
 import actor
+import robot
 import world
 import astar
 import zone
@@ -54,8 +55,6 @@ matrix_map1 = [
 map1 = map_.Map(matrix_map1)
 map1_borders = map_.Map(map1.get_borders())
 map1_borders.matrix = map1.get_borders()
-map1.print_map()
-map1_borders.print_map()
 
 world1 = world.World(map1)
 
@@ -64,4 +63,43 @@ a.walk_to((42,18))
 a.path.add_noise_to_path(0.5,map1)
 world1.add_actor(a)
 print("this shows that actors don't completely follow A-star but avoid walking really close to the walls when possible")
-world1.plot_world(showborders=True)
+world1.plot_world(showborders=True,fr=0,to=100)
+
+path_a = {
+    4: (1, 1),
+    5: (2, 2),
+    6: (3, 3),
+    7: (4, 4),
+    12: (4, 4),
+    14: (6, 4),
+    15: (6, 4.5)
+}
+
+test_pad = path.Path(path_a)
+
+test_pad.insert_waiting(14.5,10)
+print(test_pad.path_list)
+
+print("waiting is possible for a path")
+
+world2 = world.World(map1)
+map1.print_map()
+r1 = robot.Robot((1, 9), 0, map1)
+r1.plan_path_waiting_at_encounter(world2,(36,9),1,wait_time=20)
+print(r1.path.path_list)
+
+a = actor.Actor.actor_at((31,2),223, map1)
+a.walk_to((31,18))
+world2.add_actor(a)
+a = actor.Actor.actor_at((16,6),12, map1)
+a.walk_to((16,18))
+world2.add_actor(a)
+
+r2 = robot.Robot((1, 9), 0, map1)
+r2.plan_path_waiting_at_encounter(world2,(36,9),1,wait_time=200,distance=1)
+print(r2.path.path_list)
+
+world2.plot_world(robots=[r1],fr=0,to=500)
+world2.plot_world(robots=[r2],fr=0,to=500)
+
+print("waiting is possible for the robot when encountering a human")

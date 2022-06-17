@@ -48,6 +48,24 @@ class Robot:
             t = t + sample_rate
         print("amount of collisions = " + str(collisions))
 
+    def plan_path_waiting_at_encounter(self,world,destination,sample_rate,distance=2,wait_time=5):
+        last_co = self.path.get_end_location()
+        last_time = self.path.get_end_time()
+        new_path = astar.path_to_path_object(astar.a_star(self.map_, last_co, destination), last_time)
+        t = new_path.get_start_time()
+        while t < new_path.get_end_time():
+            robot_loc = new_path.get_location_at(t)
+            for a in world.actors:
+                actor_loc = a.path.get_location_at(t)
+                if actor_loc is not None and euclidian_distance(robot_loc, actor_loc)<=distance:
+                    new_path.insert_waiting(t,wait_time)
+                    t = t+wait_time
+                    continue
+            t = t + sample_rate
+
+        self.path.add_to_path_safe(new_path)
+
+
 
 def euclidian_distance(coord1,coord2):
     (x1,y1) = coord1
