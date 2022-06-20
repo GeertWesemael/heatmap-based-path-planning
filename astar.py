@@ -61,6 +61,8 @@ def a_star(map, start_co, end_co):
                     heapq.heappush(open_list, (new_f_score, neighbor_co))
     print("Error: goal never reached")
 
+
+# used for the movement of people
 def a_star_hallways(map, start_co, end_co):
     borders = map.get_borders()
 
@@ -93,7 +95,6 @@ def a_star_hallways(map, start_co, end_co):
                 if neighbor_co not in open_list:
                     heapq.heappush(open_list, (new_f_score, neighbor_co))
     print("Error: goal never reached")
-
 
 def weighted_a_star(map, start_co, end_co, heatmap, factor):
     def weight(coord, hm, f):
