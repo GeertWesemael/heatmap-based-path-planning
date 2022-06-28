@@ -9,9 +9,9 @@ import matplotlib.pylab as plt
 from timefunct import sec_to_hour_min_string
 
 
-class Heatmap:
-    def __init__(self, world, start_time=None, end_time=None, sample_rate=1, scale=1):
-        self.world = world
+class ProbHeatmap:
+    def __init__(self, worlds, start_time, end_time, sample_rate=1, scale=1):
+        self.worlds = worlds
         self.start_time = start_time
         self.end_time = end_time
         self.sample_rate = sample_rate
@@ -44,35 +44,57 @@ class Heatmap:
                     to_check.append((round(x), round(y_hi)))
             return to_check
 
-        acs = self.world.actors
-        hm = np.zeros(np.array(self.world.map_.matrix).shape)
-        for a in acs:
-            if self.start_time is None:
-                t = a.path.get_start_time()
-            else:
-                t = self.start_time
-            if self.end_time is None:
-                till = a.path.get_end_time()
-            else:
-                till = self.end_time
-            while t <= till:
-                loc_at = a.path.get_location_at(t)
-                if loc_at is None:
-                    t += self.sample_rate
-                    continue
-                co = get_coordinates_to_check(self.scale, loc_at)
-                add = []
-                for i in co:
-                    (x, y) = i
-                    if x < 0 or y < 0 or x >= len(hm[0]) or y >= len(hm):
+        # #find earliest and latest time
+        # start = 999999999999
+        # end = 0
+        # for w in self.worlds:
+        #     acs = w.actors
+        #     for a in acs:
+        #         if self.start_time is None and a.path.get_start_time() < start:
+        #             start = a.path.get_start_time()
+        #         if self.end_time is None and a.path.get_end_time() > end:
+        #             end = a.path.get_end_time()
+        #         else:
+        #             till = self.end_time
+        # if self.end_time is not None:
+        #     start = self.start_time
+        # if self.end_time is not None:
+        #     end = self.end_time
+        # if start > end:
+        #     raise Exception("no correct start or end date")
+
+        t = self.start_time
+        till = self.end_time
+        # save one matrix for prob
+        hm = np.zeros(np.array(self.worlds[0].map_.matrix).shape)
+
+        while t < till:
+            print("creating heatmap at " + sec_to_hour_min_string(t))
+            for w in self.worlds:
+                acs = w.actors
+                # hm_w contains all the positions persons where at this timeframe
+                hm_w = np.zeros(np.array(self.worlds[0].map_.matrix).shape)
+                for a in acs:
+                    loc_at = a.path.get_location_at(t)
+                    if loc_at is None:
                         continue
-                    else:
-                        if i not in add:
-                            add.append(i)
-                for i in add:
-                    (x, y) = i
-                    hm[y][x] += self.sample_rate
-                t += self.sample_rate
+                    co = get_coordinates_to_check(self.scale, loc_at)
+                    add = []
+                    for i in co:
+                        (x, y) = i
+                        if x < 0 or y < 0 or x >= len(hm[0]) or y >= len(hm):
+                            continue
+                        else:
+                            if i not in add:
+                                add.append(i)
+                    for i in add:
+                        (x, y) = i
+                        hm_w[y][x] = 1
+                # hm is the total sum of people at a certain position at a timeframe in each world
+                hm += hm_w
+            t += self.sample_rate
+        # divide it for each world and the sample rate
+        hm = hm/len(self.worlds*self.sample_rate)
         return hm
 
     def visualize_heatmap(self):
@@ -83,51 +105,13 @@ class Heatmap:
         (x, y) = coord
         return self.matrix[y][x]
 
-
-def heatmap_for_each_interval(world, interval, start_time, end_time, sample_rate=1, scale=1):
+def heatmap_for_each_interval(worlds, interval, start_time, end_time, sample_rate=1, scale=1):
     heatmaps = []
     t = start_time
     while t < end_time:
-        heatmaps.append(Heatmap(world, t, t + interval, sample_rate, scale))
+        heatmaps.append(ProbHeatmap(worlds, t, t + interval, sample_rate, scale))
         t += interval
     return heatmaps
-
-
-def combine_heatmaps(heatmaps):
-    result = heatmaps[0]
-    for i in range(1, len(heatmaps)):
-        result += heatmaps[i]
-    return result
-
-# convolution = [,,] or [,,,,]
-def combine_heatmaps_using_convolution(heatmaps,convolution):
-    if not len(convolution)%2:
-        raise Exception("even convolution")
-    result = list(heatmaps)
-    center_index = math.floor(len(convolution)/2)
-    print(len(heatmaps))
-    for i in range(len(heatmaps)):
-        result[i].matrix = heatmaps[i].matrix * convolution[center_index]
-        j = center_index
-        while j != 0:
-            if i-j >= 0:
-                print("bottom")
-                result[i].matrix += heatmaps[i - j].matrix * convolution[j - center_index]
-            if i+j < len(heatmaps):
-                print("top")
-                result[i].matrix += heatmaps[i + j].matrix * convolution[j + center_index]
-            print(i+j)
-            print(i-j)
-            j -= 1
-
-    print(heatmaps[0].matrix)
-    print(heatmaps[1].matrix)
-    print(heatmaps[2].matrix)
-    print(result[0].matrix)
-
-    return result
-
-
 
 def animate_heatmaps(heatmaps):
     v_min = 999999999999
@@ -162,3 +146,4 @@ def animate_heatmaps(heatmaps):
         plt.pause(1)
         plt.tight_layout()
         cb.remove()
+

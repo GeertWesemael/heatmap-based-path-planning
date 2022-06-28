@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import heatmap
+import prob_heatmap
 import map_
 import path
 import actor
@@ -216,6 +217,15 @@ elif val == "4":
     start = hour_min_to_sec(8, 30)
     heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=hour_min_to_sec(17, 30),
                                                  sample_rate=1, scale=1)
+    heatmaps_old = heatmaps
+    heatmap.combine_heatmaps_using_convolution(heatmaps,[0.125,0.25,0.5,0.25,0.125])
+
+    assert(heatmaps_old[0].matrix[10][10] == heatmaps[0].matrix[10][10]*0.5+heatmaps[1].matrix[10][10]*0.25+heatmaps[2].matrix[10][10]*0.125)
+
+    for i in range(len(heatmaps_old[0].matrix)):
+        for j in range(len(heatmaps_old[0].matrix[0])):
+            assert(heatmaps_old[0].matrix[i][j] == heatmaps[0].matrix[i][j]*0.5+heatmaps[1].matrix[i][j]*0.25+heatmaps[2].matrix[i][j]*0.125)
+            assert(heatmaps_old[2].matrix[i][j] == heatmaps[2].matrix[i][j]*0.5+heatmaps[3].matrix[i][j]*0.25+heatmaps[4].matrix[i][j]*0.125+heatmaps[1].matrix[i][j]*0.25+heatmaps[0].matrix[i][j]*0.125)
     heatmap.animate_heatmaps(heatmaps)
 
     r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
@@ -248,5 +258,79 @@ elif val == "4":
     r.evaluate_collisions(world1, 0.1)
     r.path.plot_path(map1, "16:00")
 
+elif val == "5":
+    print("test probability heatmaps using separate moments")
+
+    #creating diff worlds
+    list_of_worlds = [world1]
+    for i in range(4):
+        # CREATE WORLD & ACTORS
+        world1 = world.World(map1)
+
+        for _ in range(5):
+            receiver = createactors.actor_with_job("receiver", map1, zones)
+            packer = createactors.actor_with_job("packer", map1, zones)
+            forklift = createactors.actor_with_job("forklift", map1, zones)
+            shipper = createactors.actor_with_job("shipper", map1, zones)
+            world1.add_actor(receiver)
+            world1.add_actor(packer)
+            world1.add_actor(forklift)
+            world1.add_actor(shipper)
+
+        list_of_worlds.append(world1)
+        print("World " + str(i) + " was created!")
+
+    #testing out
+    interval = hour_min_to_sec(0, 30)
+    start = hour_min_to_sec(7, 30)
+    end = hour_min_to_sec(18, 30)
+    heatmaps = prob_heatmap.heatmap_for_each_interval(list_of_worlds, interval, start_time=start, end_time=end,
+                                                 sample_rate=60, scale=1)
+    prob_heatmap.animate_heatmaps(heatmaps)
+
+    # CREATE test world
+    world_test = world.World(map1)
+
+    for _ in range(5):
+        receiver = createactors.actor_with_job("receiver", map1, zones)
+        packer = createactors.actor_with_job("packer", map1, zones)
+        forklift = createactors.actor_with_job("forklift", map1, zones)
+        shipper = createactors.actor_with_job("shipper", map1, zones)
+        world_test.add_actor(receiver)
+        world_test.add_actor(packer)
+        world_test.add_actor(forklift)
+        world_test.add_actor(shipper)
+
+    world_test.plot_world()
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1, 1), heatmaps, 1)
+    r.evaluate_collisions(world_test, 0.1)
+    r.path.plot_path(map1, "11:00 - 1")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(11, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1, 1), heatmaps, 0.0001)
+    r.evaluate_collisions(world_test, 0.1)
+    r.path.plot_path(map1, "11:00 - 0.0001")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(12, 5), map1)
+    r.weighted_astar_path_plan_timeframes((1, 1), heatmaps, 1)
+    r.evaluate_collisions(world_test, 0.1)
+    r.path.plot_path(map1, "12:05")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(12, 35), map1)
+    r.weighted_astar_path_plan_timeframes((1, 1), heatmaps, 1)
+    r.evaluate_collisions(world_test, 0.1)
+    r.path.plot_path(map1, "12:35")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(8, 50), map1)
+    r.weighted_astar_path_plan_timeframes((1, 1), heatmaps, 1)
+    r.evaluate_collisions(world_test, 0.1)
+    r.path.plot_path(map1, "8:50")
+
+    r = robot.Robot((31, 18), hour_min_to_sec(16, 0), map1)
+    r.weighted_astar_path_plan_timeframes((1, 1), heatmaps, 1)
+    r.evaluate_collisions(world_test, 0.1)
+    r.path.plot_path(map1, "16:00")
 else:
     print("Option not available")

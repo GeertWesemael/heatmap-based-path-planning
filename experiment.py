@@ -4,6 +4,7 @@ import heatmap
 import map_
 import path
 import actor
+import prob_heatmap
 import robot
 import world
 import astar
@@ -37,18 +38,32 @@ if val == "1":
 
     world1 = world.World(map1)
 
-    # spawn and move actors
-    for i in range(3):
-        start_time = hour_min_to_sec(9 + i, 50)
-        end_time = hour_min_to_sec(10 + i, 10)
-        for _ in range(20):
-            a = actor.Actor.actor_at_zone(zone_b, random_time_between_(start_time, end_time), map1)
-            a.walk_to_zone(zone_a)
-            a.wait(random_time_between_(10, 600))
-            a.walk_to_zone(zone_b)
-            # add randomness to walk
-            a.path.add_noise_to_path(1, map1)
-            world1.add_actor(a)
+    # creating diff worlds
+    list_of_worlds = []
+    # CREATE WORLDS
+    for j in range(11):
+        world1 = world.World(map1)
+        # ADD ACTORS TO WORLD
+        for i in range(3):
+            start_time = hour_min_to_sec(9 + i, 50)
+            end_time = hour_min_to_sec(10 + i, 10)
+            for _ in range(20):
+                a = actor.Actor.actor_at_zone(zone_b, random_time_between_(start_time, end_time), map1)
+                a.walk_to_zone(zone_a)
+                a.wait(random_time_between_(10, 600))
+                a.walk_to_zone(zone_b)
+                # add randomness to walk
+                a.path.add_noise_to_path(1, map1)
+                world1.add_actor(a)
+        list_of_worlds.append(world1)
+        print("World " + str(j) + " was created!")
+
+    #The test world is used to count the amount of collisions
+    #The 10 first worlds are used for the probability heatmap
+    #The first one is used for the other tests
+    world1 = list_of_worlds[0]
+    world_test = list_of_worlds[10]
+    list_of_worlds = list_of_worlds[0:10]
 
     # test
     world1.plot_world()
@@ -65,22 +80,55 @@ if val == "1":
                                                  sample_rate=1, scale=1)
     heatmap.animate_heatmaps(heatmaps)
 
+    print("heatmap stuff done")
+
+    prob_heatmaps = prob_heatmap.heatmap_for_each_interval(list_of_worlds, interval, start_time=start, end_time=end,
+                                                 sample_rate=1, scale=1)
+    prob_heatmap.animate_heatmaps(prob_heatmaps)
+
+    print("prob heatmap stuff done")
+
     r1 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,0),map1)
     r1.weighted_astar_path_plan(zone_c.get_random_location(),heatm,1)
-    r1.evaluate_collisions(world1, 0.1)
+    r1.evaluate_collisions(world_test, 0.1)
     r1.path.plot_path(map1,"r1 10h global heatmap")
 
     r1 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,30),map1)
     r1.weighted_astar_path_plan(zone_c.get_random_location(),heatm,1)
-    r1.evaluate_collisions(world1, 0.1)
+    r1.evaluate_collisions(world_test, 0.1)
     r1.path.plot_path(map1,"r1 10h30 global heatmap")
 
     r2 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,0),map1)
     r2.weighted_astar_path_plan_timeframes(zone_c.get_random_location(),heatmaps,1)
-    r2.evaluate_collisions(world1, 0.1)
+    r2.evaluate_collisions(world_test, 0.1)
     r2.path.plot_path(map1,"r2 10h timeframed heatmap")
 
     r2 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,30),map1)
     r2.weighted_astar_path_plan_timeframes(zone_c.get_random_location(),heatmaps,1)
-    r2.evaluate_collisions(world1, 0.1)
+    r2.evaluate_collisions(world_test, 0.1)
     r2.path.plot_path(map1,"r2 10h30 timeframed heatmap")
+
+    r3 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,0),map1)
+    r3.weighted_astar_path_plan_timeframes(zone_c.get_random_location(),heatmaps,1)
+    r3.evaluate_collisions(world_test, 0.1)
+    r3.path.plot_path(map1,"r3 10h prob timeframed heatmap")
+
+    r3 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,30),map1)
+    r3.weighted_astar_path_plan_timeframes(zone_c.get_random_location(),heatmaps,1)
+    r3.evaluate_collisions(world_test, 0.1)
+    r3.path.plot_path(map1,"r3 10h30 prob timeframed heatmap")
+
+    r4 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,0),map1)
+    r4.plan_path_waiting_at_encounter(world1,zone_c.get_random_location(),0.1)
+    r4.evaluate_collisions(world_test, 0.1)
+    r4.path.plot_path(map1,"r4 10h wait")
+
+    r4 = robot.Robot(zone_d.get_random_location(),hour_min_to_sec(10,30),map1)
+    r4.plan_path_waiting_at_encounter(world1,zone_c.get_random_location(),0.1)
+    r4.evaluate_collisions(world_test, 0.1)
+    r4.path.plot_path(map1,"r4 10h30 wait")
+
+    # factor of heatmaps??
+    # sample rate of prob heatmap??
+    # sample rate of other heatmap??
+
