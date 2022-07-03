@@ -13,6 +13,9 @@ class World:
         self.map_ = map_
         self.actors = []
 
+    def get_map(self):
+        return self.map_
+
     def add_actor(self, actor):
         # #check overlap walls
         # for p in actor.path.values:
