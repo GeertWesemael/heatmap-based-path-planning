@@ -152,8 +152,6 @@ def animate_heatmaps(heatmaps):
         for y in range(len(matrices[i])):
             for x in range(len(matrices[i][0])):
                 number = heatmaps[i].get_value_at((x, y))
-                if (number).is_integer:
-                    number = int(number)
                 if len(str(number)) > 4:
                     number = "__"
                 else:

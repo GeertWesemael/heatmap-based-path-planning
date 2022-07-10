@@ -65,6 +65,9 @@ class ProbHeatmap:
 
         t = self.start_time
         till = self.end_time
+
+        timeframe = till - t
+        amount_per_timeframe = timeframe / self.sample_rate
         # save one matrix for prob
         hm = np.zeros(np.array(self.worlds[0].map_.matrix).shape)
 
@@ -94,7 +97,7 @@ class ProbHeatmap:
                 hm += hm_w
             t += self.sample_rate
         # divide it for each world and the sample rate
-        hm = hm/len(self.worlds*self.sample_rate)
+        hm = hm/(len(self.worlds)*amount_per_timeframe)
         return hm
 
     def visualize_heatmap(self):
@@ -136,12 +139,7 @@ def animate_heatmaps(heatmaps):
         for y in range(len(matrices[i])):
             for x in range(len(matrices[i][0])):
                 number = heatmaps[i].get_value_at((x, y))
-                if (number).is_integer:
-                    number = int(number)
-                if len(str(number)) > 4:
-                    number = "__"
-                else:
-                    number = str(number)
+                number = str(number)[0:4]
                 text = ax.text(x, y, number, ha="center", va="center", color="w", fontsize="x-small")
         plt.pause(1)
         plt.tight_layout()

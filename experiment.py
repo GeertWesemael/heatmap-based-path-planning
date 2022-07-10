@@ -44,13 +44,13 @@ if val == "1":
     end = hour_min_to_sec(13, 0)
     heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=end,
                                                  sample_rate=1, scale=1)
-    # heatmap.animate_heatmaps(heatmaps)
+    heatmap.animate_heatmaps(heatmaps)
 
     print("heatmap stuff done")
 
     prob_heatmaps = prob_heatmap.heatmap_for_each_interval(list_of_worlds, interval, start_time=start, end_time=end,
                                                            sample_rate=1, scale=1)
-    # prob_heatmap.animate_heatmaps(prob_heatmaps)
+    prob_heatmap.animate_heatmaps(prob_heatmaps)
 
     print("prob heatmap stuff done")
 
