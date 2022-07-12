@@ -48,14 +48,26 @@ class Robot:
             t = t + sample_rate
         return collisions
 
+    def get_time(self):
+        return self.path.get_time()
+
+    def evaluate_time(self):
+        print(f"time of path = {self.get_time()}")
+        return self.get_time()
+
     def evaluate_collisions(self, world, sample_rate, distance=1):
-        print("amount of collisions = " + str(self.get_collisions(world, sample_rate, distance)))
+        r = self.get_collisions(world, sample_rate, distance)
+        print(f"amount of collisions = {r}")
+        return r
 
     def evaluate_collisions_worlds(self, worlds, sample_rate, distance=1):
         amount = 0
         for i in worlds:
             amount += self.get_collisions(i, sample_rate, distance)
-        print("amount of collisions in all the test worlds = " + str(amount))
+        r = amount/len(worlds)
+        print(f"avg amount of collisions in all the test worlds = {r}")
+        return r
+
 
     def plan_path_waiting_at_encounter(self, world, destination, sample_rate, distance=2, wait_time=5):
         last_co = self.path.get_end_location()
