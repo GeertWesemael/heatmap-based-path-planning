@@ -55,6 +55,7 @@ class Heatmap:
                 till = a.path.get_end_time()
             else:
                 till = self.end_time
+
             while t <= till:
                 loc_at = a.path.get_location_at(t)
                 if loc_at is None:

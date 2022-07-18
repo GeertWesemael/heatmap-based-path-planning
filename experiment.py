@@ -16,24 +16,40 @@ import matplotlib.pyplot as plt
 from timefunct import sec_to_hour, hour_min_to_sec
 from timefunct import random_time_between, random_time_between_, sec_to_hour_min_string
 from openpyxl import load_workbook
+
 ##################################
-val = 1
-# easy setup
-robot_start_time = hour_min_to_sec(10, 0)
+
+val = 3
+experiment = "prob_tf"  # total,tf,prob_tf,wait
+
+# ########### easy setup ###########
+# robot_start_time = hour_min_to_sec(10, 0)
+# interval = hour_min_to_sec(0, 10)
+# start = hour_min_to_sec(9, 30)
+# end = hour_min_to_sec(11, 0)
+# start_loc_robot = (6, 7)
+# end_loc_robot = (6, 0)
+
+########### hard setup ###########
+robot_start_time = hour_min_to_sec(9, 30)
 interval = hour_min_to_sec(0, 10)
-start = hour_min_to_sec(9, 30)
-end = hour_min_to_sec(13, 0)
-start_loc_robot = (6, 7)
-end_loc_robot = (6, 0)
+start = hour_min_to_sec(8, 30)
+end = hour_min_to_sec(10, 30)
+start_loc_robot = (0, 4)
+end_loc_robot = (17, 4)
 
 ###################################
 # adjustable param
-a_star_weight_factor = 1
+a_star_weight_factor = 90
+amount_of_sample_worlds = 10
+amount_of_test_worlds = 90
 
 ###################################
 # standard parameters (don't touch)
 sample_r_col = 0.1
 sample_r_wait = 0.1
+distance_robot = 2
+wait_time = 5
 ###################################
 
 filename = ''
@@ -60,54 +76,68 @@ print("Unpickled")
 
 # read all test worlds
 world1 = list_of_worlds[0]
-world_test = list_of_worlds[99]
-world_tests = list_of_worlds[10:100]
-list_of_worlds = list_of_worlds[0:10]
+world_test = list_of_worlds[amount_of_sample_worlds + amount_of_test_worlds - 1]
+world_tests = list_of_worlds[amount_of_sample_worlds:amount_of_sample_worlds + amount_of_test_worlds]
+list_of_worlds = list_of_worlds[0:amount_of_sample_worlds]
 print(f"number of worlds used: {len(list_of_worlds)} / number of test worlds: {len(world_tests)}")
 
 print("plotting the world")
 world1.plot_world()
 
-print("total heatmap")
-heatm = heatmap.Heatmap(world1, sample_rate=1, scale=1)
-# heatm.visualize_heatmap()
+coll = None
+time = None
+r1 = None
+heatm = None
+heatmaps = None
+prob_heatmaps = None
 
-print("moment heatmap")
-heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=end, sample_rate=1, scale=1)
-# heatmap.animate_heatmaps(heatmaps)
+if experiment == "total":
+    print("total heatmap")
+    heatm = heatmap.Heatmap(world1, sample_rate=1, scale=1)
+    # heatm.visualize_heatmap()
 
-print("moment prob_heatmap")
+if experiment == "tf":
+    print("moment heatmap")
+    heatmaps = heatmap.heatmap_for_each_interval(world1, interval, start_time=start, end_time=end, sample_rate=1,
+                                                 scale=1)
+    # heatmap.animate_heatmaps(heatmaps)
 
-prob_heatmaps = prob_heatmap.heatmap_for_each_interval(list_of_worlds, interval, start_time=start, end_time=end,
-                                                       sample_rate=1, scale=1)
-# prob_heatmap.animate_heatmaps(prob_heatmaps)
+if experiment == "prob_tf":
+    print("moment prob_heatmap")
+    prob_heatmaps = prob_heatmap.heatmap_for_each_interval(list_of_worlds, interval, start_time=start, end_time=end,
+                                                           sample_rate=1, scale=1)
+    # prob_heatmap.animate_heatmaps(prob_heatmaps)
 
 print("finding robot paths")
 map1 = world1.get_map()
 
-r1 = robot.Robot(start_loc_robot, robot_start_time, map1)
-r1.weighted_astar_path_plan(end_loc_robot, heatm, a_star_weight_factor)
-coll_1 = r1.evaluate_collisions_worlds(world_tests, sample_r_col)
-time_1 = r1.evaluate_time()
-r1.path.plot_path(map1, "r1 10h global heatmap")
+if experiment == "total":
+    r1 = robot.Robot(start_loc_robot, robot_start_time, map1)
+    r1.weighted_astar_path_plan(end_loc_robot, heatm, a_star_weight_factor)
+    coll = r1.evaluate_collisions_worlds(world_tests, sample_r_col)
+    time = r1.evaluate_time()
+    r1.path.plot_path(map1, "r1 10h global heatmap")
 
-r2 = robot.Robot(start_loc_robot, robot_start_time, map1)
-r2.weighted_astar_path_plan_timeframes(end_loc_robot, heatmaps, a_star_weight_factor)
-coll_2 = r2.evaluate_collisions_worlds(world_tests, sample_r_col)
-time_2 = r2.evaluate_time()
-r2.path.plot_path(map1, "r2 10h timeframed heatmap")
+if experiment == "tf":
+    r1 = robot.Robot(start_loc_robot, robot_start_time, map1)
+    r1.weighted_astar_path_plan_timeframes(end_loc_robot, heatmaps, a_star_weight_factor)
+    coll = r1.evaluate_collisions_worlds(world_tests, sample_r_col)
+    time = r1.evaluate_time()
+    r1.path.plot_path(map1, "r2 10h timeframed heatmap")
 
-r3 = robot.Robot(start_loc_robot, robot_start_time, map1)
-r3.weighted_astar_path_plan_timeframes(end_loc_robot, heatmaps, a_star_weight_factor)
-coll_3 = r3.evaluate_collisions_worlds(world_tests, sample_r_col)
-time_3 = r3.evaluate_time()
-r3.path.plot_path(map1, "r3 10h prob timeframed heatmap")
+if experiment == "prob_tf":
+    r1 = robot.Robot(start_loc_robot, robot_start_time, map1)
+    r1.weighted_astar_path_plan_timeframes(end_loc_robot, prob_heatmaps, a_star_weight_factor)
+    coll = r1.evaluate_collisions_worlds(world_tests, sample_r_col)
+    time = r1.evaluate_time()
+    r1.path.plot_path(map1, "r3 10h prob timeframed heatmap")
 
-r4 = robot.Robot(start_loc_robot, robot_start_time, map1)
-r4.plan_path_waiting_at_encounter(world1, end_loc_robot, sample_r_wait)
-coll_4 = r4.evaluate_collisions_worlds(world_tests, sample_r_col)
-time_4 = r4.evaluate_time()
-r4.path.plot_path(map1, "r4 10h wait")
+if experiment == "wait":
+    r1 = robot.Robot(start_loc_robot, robot_start_time, map1)
+    r1.plan_path_waiting_at_encounter(world1, end_loc_robot, sample_r_wait, distance_robot, wait_time)
+    coll = r1.evaluate_collisions_worlds(world_tests, sample_r_col)
+    time = r1.evaluate_time()
+    r1.path.plot_path(map1, "r4 10h wait")
 
 # Write data to TXT file
 # Open a file with access mode 'a'
@@ -115,8 +145,8 @@ file_object = open('results.txt', 'a')
 # Append 'hello' at the end of file
 file_object.write(f'world: {val}, start: {sec_to_hour_min_string(start)}, end: {sec_to_hour_min_string(end)}, '
                   f'interval: {sec_to_hour_min_string(interval)}, r_start: {sec_to_hour_min_string(robot_start_time)}, '
-                  f'wf: {a_star_weight_factor}, coll_g: {coll_1}, time_g: {time_1}, coll_tf: {coll_2}, time_tf: {time_2}, '
-                  f'coll_ptf: {coll_3}, time_ptf: {time_3}, coll_w: {coll_4}, time_w: {time_4}')
+                  f'wf: {a_star_weight_factor}, s_w: {amount_of_sample_worlds}, t_w: {amount_of_test_worlds}, '
+                  f'exp: {experiment}, coll: {coll}, time: {time}')
 file_object.write('\n')
 # Close the file
 file_object.close()
@@ -127,27 +157,18 @@ workbook = load_workbook(filename="results.xlsx")
 sheet = workbook.active
 new_row = sheet.max_row + 1
 
-
-sheet.cell(row=new_row,column=1).value = val
-sheet.cell(row=new_row,column=2).value = sec_to_hour_min_string(start)
-sheet.cell(row=new_row,column=3).value = sec_to_hour_min_string(end)
-sheet.cell(row=new_row,column=4).value = sec_to_hour_min_string(interval)
-sheet.cell(row=new_row,column=5).value = sec_to_hour_min_string(robot_start_time)
-sheet.cell(row=new_row,column=6).value = a_star_weight_factor
-sheet.cell(row=new_row,column=7).value = coll_1
-sheet.cell(row=new_row,column=8).value = time_1
-sheet.cell(row=new_row,column=9).value = str(r1.path.path_list)
-sheet.cell(row=new_row,column=10).value = coll_2
-sheet.cell(row=new_row,column=11).value = time_2
-sheet.cell(row=new_row,column=12).value = str(r2.path.path_list)
-sheet.cell(row=new_row,column=13).value = coll_3
-sheet.cell(row=new_row,column=14).value = time_3
-sheet.cell(row=new_row,column=15).value = str(r3.path.path_list)
-sheet.cell(row=new_row,column=16).value = coll_4
-sheet.cell(row=new_row,column=17).value = time_4
-sheet.cell(row=new_row,column=18).value = str(r4.path.path_list)
-
-
+sheet.cell(row=new_row, column=1).value = val
+sheet.cell(row=new_row, column=2).value = sec_to_hour_min_string(start)
+sheet.cell(row=new_row, column=3).value = sec_to_hour_min_string(end)
+sheet.cell(row=new_row, column=4).value = sec_to_hour_min_string(interval)
+sheet.cell(row=new_row, column=5).value = sec_to_hour_min_string(robot_start_time)
+sheet.cell(row=new_row, column=6).value = a_star_weight_factor
+sheet.cell(row=new_row, column=7).value = amount_of_sample_worlds
+sheet.cell(row=new_row, column=8).value = amount_of_test_worlds
+sheet.cell(row=new_row, column=9).value = experiment
+sheet.cell(row=new_row, column=10).value = coll
+sheet.cell(row=new_row, column=11).value = time
+sheet.cell(row=new_row, column=12).value = str(r1.path.path_list)
 
 workbook.save(filename="results.xlsx")
 
