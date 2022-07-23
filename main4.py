@@ -16,7 +16,7 @@ from timefunct import random_time_between, random_time_between_, sec_to_hour_min
 
 val = input("What experiment setup do you want to run? ")
 print("Run easy setup")
-filename = 'easy_scenario_worlds'
+filename = 'easy_scenario_worlds_1'
 infile = open(filename, 'rb')
 list_of_worlds = pickle.load(infile)
 infile.close()

@@ -15,6 +15,8 @@ from timefunct import sec_to_hour, hour_min_to_sec
 from timefunct import random_time_between, random_time_between_, sec_to_hour_min_string
 import pickle
 
+random.seed(1)
+
 # create map and zones
 matrix_map1 = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
                [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],

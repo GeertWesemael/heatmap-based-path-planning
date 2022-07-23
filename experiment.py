@@ -24,7 +24,7 @@ experiment = "prob_tf"  # total,tf,prob_tf,wait
 
 ########### easy setup ###########
 robot_start_time = hour_min_to_sec(10, 0)
-interval = 1 #hour_min_to_sec(0, 1)
+interval = hour_min_to_sec(0, 10)
 start = hour_min_to_sec(9, 30)
 end = hour_min_to_sec(11, 0)
 start_loc_robot = (6, 7)
@@ -55,7 +55,7 @@ wait_time = 5
 filename = ''
 if val == 1:
     print("Run easy setup")
-    filename = 'easy_scenario_worlds'
+    filename = 'easy_scenario_worlds_4'
 
 if val == 2:
     print("Run medium setup")
@@ -82,7 +82,7 @@ list_of_worlds = list_of_worlds[0:amount_of_sample_worlds]
 print(f"number of worlds used: {len(list_of_worlds)} / number of test worlds: {len(world_tests)}")
 
 print("plotting the world")
-# world1.plot_world()
+world1.plot_world()
 
 coll = None
 time = None
@@ -110,7 +110,7 @@ if experiment == "prob_tf":
 
 
 #################################################################################
-for value in range(1, 50):
+for value in range(20, 60):
     print("start value " + str(value))
     a_star_weight_factor = value
 

@@ -15,6 +15,8 @@ from timefunct import sec_to_hour, hour_min_to_sec
 from timefunct import random_time_between, random_time_between_, sec_to_hour_min_string
 import pickle
 
+random.seed(1)
+
 # create map and zones
 matrix_map1 = [[1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
                [1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
@@ -44,7 +46,7 @@ for j in range(100):
     for i in range(3):
         start_time = hour_min_to_sec(9 + i, 50)
         end_time = hour_min_to_sec(10 + i, 10)
-        for _ in range(20):
+        for _ in range(40):
             a = actor.Actor.actor_at_zone(zone_b, random_time_between_(start_time, end_time), map1)
             a.walk_to_zone(zone_a)
             a.wait(random_time_between_(10, 600))
@@ -55,7 +57,7 @@ for j in range(100):
     list_of_worlds.append(world1)
     print("World " + str(j) + " was created!")
 
-filename = 'easy_scenario_worlds'
+filename = 'easy_scenario_worlds_4'
 outfile = open(filename,'wb')
 pickle.dump(list_of_worlds,outfile)
 outfile.close()
