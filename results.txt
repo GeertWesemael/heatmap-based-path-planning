@@ -3001,3 +3001,6 @@ world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, w
 world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, wf: 57, s_w: 10, t_w: 90, exp: prob_tf, coll: 0.0, time: 15.60000000000582
 world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, wf: 58, s_w: 10, t_w: 90, exp: prob_tf, coll: 0.0, time: 15.60000000000582
 world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, wf: 59, s_w: 10, t_w: 90, exp: prob_tf, coll: 0.0, time: 15.60000000000582
+world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, wf: 20, s_w: 10, t_w: 90, exp: prob_tf, coll: 2.3, time: 8
+world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, wf: 20, s_w: 10, t_w: 90, exp: total, coll: 0.0, time: 15.60000000000582
+world: 1, start: 9:30:00, end: 11:00:00, interval: 0:10:00, r_start: 10:00:00, wf: 21, s_w: 10, t_w: 90, exp: total, coll: 0.0, time: 15.60000000000582

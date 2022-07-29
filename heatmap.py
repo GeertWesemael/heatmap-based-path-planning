@@ -19,6 +19,8 @@ class Heatmap:
         # numpy matrix object
         self.matrix = self.create_heatmap()
 
+    #scale is the size of an actor
+
     def create_heatmap(self):
         def get_coordinates_to_check(scale, co):
             (x, y) = co
@@ -76,9 +78,13 @@ class Heatmap:
                 t += self.sample_rate
         return hm
 
-    def visualize_heatmap(self):
-        ax = sns.heatmap(self.matrix, linewidth=0.5, annot=True, annot_kws={"size": 6})
+    def visualize_heatmap(self,title=None):
+        if title is None:
+            sns.heatmap(self.matrix, linewidth=0.5, annot=True, annot_kws={"size": 6})
+        else:
+            sns.heatmap(self.matrix, linewidth=0.5, annot=True, annot_kws={"size": 6}).set(title=title)
         plt.show()
+
 
     def get_value_at(self, coord):
         (x, y) = coord
@@ -158,6 +164,6 @@ def animate_heatmaps(heatmaps):
                 else:
                     number = str(number)
                 text = ax.text(x, y, number, ha="center", va="center", color="w", fontsize="x-small")
-        plt.pause(1)
+        plt.pause(10)
         plt.tight_layout()
         cb.remove()

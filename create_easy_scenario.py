@@ -46,18 +46,18 @@ for j in range(100):
     for i in range(3):
         start_time = hour_min_to_sec(9 + i, 50)
         end_time = hour_min_to_sec(10 + i, 10)
-        for _ in range(40):
+        for _ in range(10):
             a = actor.Actor.actor_at_zone(zone_b, random_time_between_(start_time, end_time), map1)
             a.walk_to_zone(zone_a)
             a.wait(random_time_between_(10, 600))
             a.walk_to_zone(zone_b)
             # add randomness to walk
-            a.path.add_noise_to_path(1, map1)
+            a.path.add_noise_to_path(0.5, map1)
             world1.add_actor(a)
     list_of_worlds.append(world1)
     print("World " + str(j) + " was created!")
 
-filename = 'easy_scenario_worlds_4'
+filename = 'easy_scenario_worlds'
 outfile = open(filename,'wb')
 pickle.dump(list_of_worlds,outfile)
 outfile.close()

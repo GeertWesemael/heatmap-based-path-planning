@@ -20,7 +20,7 @@ from openpyxl import load_workbook
 ##################################
 
 val = 1
-experiment = "prob_tf"  # total,tf,prob_tf,wait
+experiment = "total"  # total,tf,prob_tf,wait
 
 ########### easy setup ###########
 robot_start_time = hour_min_to_sec(10, 0)
@@ -55,7 +55,7 @@ wait_time = 5
 filename = ''
 if val == 1:
     print("Run easy setup")
-    filename = 'easy_scenario_worlds_4'
+    filename = 'easy_scenario_worlds'
 
 if val == 2:
     print("Run medium setup")
@@ -83,6 +83,11 @@ print(f"number of worlds used: {len(list_of_worlds)} / number of test worlds: {l
 
 print("plotting the world")
 world1.plot_world()
+world1.get_map().print_map()
+print(world1.get_map().matrix)
+world1.actors[4].plot_path()
+world1.actors[4].print_path()
+
 
 coll = None
 time = None
@@ -94,7 +99,7 @@ prob_heatmaps = None
 if experiment == "total":
     print("total heatmap")
     heatm = heatmap.Heatmap(world1, sample_rate=1, scale=1)
-    # heatm.visualize_heatmap()
+    heatm.visualize_heatmap()
 
 if experiment == "tf":
     print("moment heatmap")

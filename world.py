@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib.collections import LineCollection
-from timefunct import sec_to_hour_min_string, sec_to_hour
+from timefunct import sec_to_hour_min_string, sec_to_hour, hour_min_to_sec
 import matplotlib.pyplot as plt
 from matplotlib.path import Path as Pathmatplotlib
 import matplotlib.patches as patches
@@ -121,33 +121,46 @@ class World:
     #             print("\nworld at time " + sec_to_hour_min_string(t) + " :\n" + print_string)
     #         last_print = print_string
 
-    def plot_world(self,showborders = False,robots = None, fr = None, to = None):
-        if len(self.actors) == 0:
-            raise Exception("No Actors in this world")
-        fig, ax = plt.subplots()
+    def plot_world(self,showborders = False,robots = None, fr = None, to = None, title = None, hours = False):
 
-        #add actors
-        for a in self.actors:
-            data = np.array(a.path.values)
-
-            x = data[:, 0]
-            y = data[:, 1]
-
+        def fr_to_list(keys):
             if fr is not None and to is not None:
-                cols = list(a.path.keys) + [fr, to]
                 print("be aware: any instances outside of fr/to will give a wrong visualization")
+                if hours:
+                    cols_ = list(map(sec_to_hour, keys)) + [sec_to_hour(fr),sec_to_hour(to)]
+                else:
+                    cols_ = list(keys) + [fr, to]
             else:
-                cols = list(map(sec_to_hour, a.path.keys)) + [8,18]
+                if hours:
+                    cols_ = list(map(sec_to_hour, keys)) + [8, 18]
+                else:
+                    cols_ = list(keys) + [hour_min_to_sec(8,0),hour_min_to_sec(18,0)]
+            return cols_
 
-            points = np.array([x, y]).T.reshape(-1, 1, 2)
-            segments = np.concatenate([points[:-1], points[1:]], axis=1)
+        fig, ax = plt.subplots()
+        if len(self.actors) == 0:
+            print("No Actors in this world")
+        else:
+            #add actors
+            for a in self.actors:
+                data = np.array(a.path.values)
 
-            lc = LineCollection(segments, cmap='magma')
-            lc.set_array(cols)
-            lc.set_linewidth(2)
-            line = ax.add_collection(lc)
-        fig.colorbar(line, ax=ax)
+                x = data[:, 0]
+                y = data[:, 1]
 
+                cols = fr_to_list(a.path.keys)
+
+                points = np.array([x, y]).T.reshape(-1, 1, 2)
+                segments = np.concatenate([points[:-1], points[1:]], axis=1)
+
+                lc = LineCollection(segments, cmap='rainbow')
+                lc.set_array(cols)
+                lc.set_linewidth(2)
+                line = ax.add_collection(lc)
+            if not hours:
+               fig.colorbar(line, ax=ax, label="time in seconds")
+            else:
+                fig.colorbar(line, ax=ax, label="time in hours")
         #add robots if i added one
         if robots is not None:
             for r in robots:
@@ -156,21 +169,17 @@ class World:
                 x = data[:, 0]
                 y = data[:, 1]
 
-                if fr is not None and to is not None:
-                    cols = list(r.path.keys) + [fr,to]
-                    print("be aware: any instances outside of fr/to will give a wrong visualization")
-                else:
-                    cols = list(map(sec_to_hour, r.path.keys)) + [8, 18]
+                fr_to_list(r.path.keys)
 
                 points = np.array([x, y]).T.reshape(-1, 1, 2)
                 segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
-                lc = LineCollection(segments, cmap='viridis')
+                lc = LineCollection(segments, cmap='rainbow')
                 lc.set_array(cols)
-                lc.set_linewidth(4)
+                lc.set_linewidth(6)
                 line = ax.add_collection(lc)
                 print(cols)
-            fig.colorbar(line, ax=ax)
+            # fig.colorbar(line, ax=ax)
 
         map_data = np.array(self.map_.get_locations_of(1))
         map_data_borders = np.array(self.map_.get_location_of_borders())
@@ -216,5 +225,7 @@ class World:
         ax.set_xlim(0, len(self.map_.matrix[0])-1)
         ax.set_ylim(0, len(self.map_.matrix)-1)
         ax.set_aspect('equal', adjustable='datalim')
+        if title is not None:
+            ax.set_title(title)
         plt.gca().invert_yaxis()
         plt.show()

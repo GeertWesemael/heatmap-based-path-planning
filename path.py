@@ -165,7 +165,7 @@ class Path:
         lc.set_array(cols)
         lc.set_linewidth(2)
         line = ax.add_collection(lc)
-        fig.colorbar(line, ax=ax)
+        fig.colorbar(line, ax=ax, label="time in seconds")
         map_data = np.array(map_.get_locations_of(1))
 
         codes = [

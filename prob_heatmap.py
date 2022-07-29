@@ -100,8 +100,11 @@ class ProbHeatmap:
         hm = hm/(len(self.worlds)*amount_per_timeframe)
         return hm
 
-    def visualize_heatmap(self):
-        ax = sns.heatmap(self.matrix, linewidth=0.5, annot=True, annot_kws={"size": 6})
+    def visualize_heatmap(self,title=None):
+        if title is None:
+            sns.heatmap(self.matrix, linewidth=0.5, annot=True, annot_kws={"size": 6})
+        else:
+            sns.heatmap(self.matrix, linewidth=0.5, annot=True, annot_kws={"size": 6}).set(title=title)
         plt.show()
 
     def get_value_at(self, coord):
