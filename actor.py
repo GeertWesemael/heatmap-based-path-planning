@@ -6,6 +6,23 @@ class Actor:
     def __init__(self, path_, map_):
         self.path = path_
         self.map_ = map_
+        self.invulnerable = 0
+
+    def set_invulnerable(self,number):
+        self.invulnerable = number
+
+    def reduce_invulnerable(self,number):
+
+        self.invulnerable = self.invulnerable - number
+        if self.invulnerable < 0:
+            self.invulnerable = 0
+
+    def is_vulnerable(self):
+        if self.invulnerable <= 0:
+            return True
+        else:
+            return False
+
 
     @classmethod  # stand still at least 1 sec
     def actor_at(cls, coordinate, time, map_):

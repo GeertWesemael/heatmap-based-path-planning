@@ -36,15 +36,20 @@ class Robot:
             if i.start_time <= start < i.end_time:
                 return self.weighted_astar_path_plan(destination, i, factor)
 
-    def get_collisions(self, world, sample_rate, distance=1):
+    def get_collisions(self, world, sample_rate, distance=1,out_time=2):
         collisions = 0
         t = self.path.get_start_time()
+
         while t < self.path.get_end_time():
             robot_loc = self.path.get_location_at(t)
             for a in world.actors:
-                actor_loc = a.path.get_location_at(t)
-                if actor_loc is not None and euclidian_distance(robot_loc, actor_loc) <= distance:
-                    collisions += 1
+                if a.is_vulnerable():
+                    actor_loc = a.path.get_location_at(t)
+                    if actor_loc is not None and euclidian_distance(robot_loc, actor_loc) <= distance:
+                        collisions += 1
+                        a.set_invulnerable(out_time)
+                else:
+                    a.reduce_invulnerable(sample_rate)
             t = t + sample_rate
         return collisions
 

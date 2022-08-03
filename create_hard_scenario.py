@@ -17,59 +17,88 @@ import pickle
 
 random.seed(1)
 
-# create map and zones
-matrix_map1 = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
-               [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-               [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-               [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-               [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-               [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1]]
-map1 = map_.Map(matrix_map1)
-zone_a = zone.Zone("zone_a", "A", [(2, 2), (3, 2), (2, 3), (3, 3), (2,4), (3,4), (2,5), (3,5), (2,6), (3,6)])
-zone_b = zone.Zone("zone_b", "B", [(7, 2), (8, 2), (7, 3), (8, 3), (7,4), (8,4), (7,5), (8,5), (7,6), (8,6)])
-zone_c = zone.Zone("zone_c", "C", [(14, 2), (15, 2), (14, 3), (15, 3), (14,4), (15,4), (14,5), (15,5), (14,6), (15,6)])
-door = zone.Zone("door", "D", [(11, 0), (11, 8)])
+scenario = 1
+amount_actors = 20
 
-zones = [zone_a, zone_b, zone_c, door]
+# create map and zones
+matrix_map1 = [[1, 1, 1, 1, 1, 1, 1, 0, 1],
+               [1, 0, 0, 0, 0, 0, 0, 0, 1],
+               [1, 0, 1, 1, 1, 1, 1, 0, 1],
+               [1, 0, 1, 0, 0, 0, 1, 0, 1],
+               [1, 0, 0, 0, 0, 0, 0, 0, 1],
+               [1, 0, 1, 0, 0, 0, 1, 0, 1],
+               [0, 0, 1, 1, 1, 1, 1, 0, 0],
+               [1, 0, 1, 0, 0, 0, 1, 0, 1],
+               [1, 0, 0, 0, 0, 0, 0, 0, 1],
+               [1, 0, 1, 0, 0, 0, 1, 0, 1],
+               [1, 0, 1, 1, 1, 1, 1, 0, 1],
+               [1, 0, 0, 0, 0, 0, 0, 0, 1],
+               [1, 1, 1, 1, 1, 1, 1, 0, 1]]
+map1 = map_.Map(matrix_map1)
+zone_a = zone.Zone("zone_a", "A", [(3,3) , (3,4) , (3,5) , (4,3) , (4,4) , (4,5) , (5,3) , (5,4) , (5,5)])
+zone_b = zone.Zone("zone_b", "B", [(3,7) , (3,8) , (3,9) , (4,7) , (4,8) , (4,9) , (5,7) , (5,8) , (5,9)])
+zone_c = zone.Zone("zone_c", "C", [(7,0)])
+zone_d = zone.Zone("zone_d", "D", [(7,12)])
+zone_e = zone.Zone("zone_e", "E", [(0,6)])
+zone_f = zone.Zone("zone_f", "F", [(8,6)])
+
+
+zones = [zone_a, zone_b, zone_c, zone_d, zone_e, zone_f]
 zone.print_zone(map1, zones)
 all_zones = zone.Zone.combined_zones(zones)
-
 world1 = world.World(map1)
 
 # creating diff worlds
 list_of_worlds = []
 # CREATE WORLDS
-for j in range(100):
+for j in range(1000):
     world1 = world.World(map1)
-    # ADD ACTORS TO WORLD
-    r = random.uniform(0,1)
-    profession_zone = None
-    if r > 0.9:
-        profession_zone = zone_a
-    if 0.9 >= r > 0.45:
-        profession_zone = zone_b
-    if r <= 0.45:
-        profession_zone = zone_c
 
-    for _ in range(5):
-        a = actor.Actor.actor_at_zone(door, random_time_between(8, 50, 9, 10), map1)
-        stop_time = random_time_between(9, 50, 10, 10)
-        # first work shift
-        while a.path.get_end_time() <= stop_time:
+    if scenario == 1:
+        profession_zone = None
+        door_zone = None
+        if j % 2 == 0:
+            profession_zone = zone_a
+            door_zone = zone_c
+        else:
+            profession_zone = zone_b
+            door_zone = zone_d
+
+        # amount of actors
+        for _ in range(amount_actors):
+            a = actor.Actor.actor_at_zone(door_zone, random_time_between(9, 45, 10, 15), map1)
             a.walk_to_zone(profession_zone)
-            r = random_time_between(0, 1, 0, 5)
-            a.wait(r)
-        a.walk_to_zone(door)
-        a.path.add_noise_to_path(0.5, map1)
-        world1.add_actor(a)
+            a.wait(random_time_between(5, 0, 10, 0))
+            a.walk_to_zone(door_zone)
+            a.path.add_noise_to_path(0.5, map1)
+            world1.add_actor(a)
+
+    else:
+        dense_zone = zone_a
+        dense_door = zone_c
+        sparse_zone = zone_b
+        sparse_door = zone_d
+        #amount of actors
+        for _ in range(amount_actors):
+            #dense zone
+            a = actor.Actor.actor_at_zone(dense_door, random_time_between(9, 45, 10, 15), map1)
+            a.walk_to_zone(dense_zone)
+            a.wait(random_time_between(0, 30, 2, 0))
+            a.walk_to_zone(dense_door)
+            a.path.add_noise_to_path(0.5, map1)
+            world1.add_actor(a)
+            #sparse zone
+            a = actor.Actor.actor_at_zone(sparse_door, random_time_between(9, 59, 10, 1), map1)
+            a.walk_to_zone(sparse_zone)
+            a.wait(random_time_between(0, 30, 2, 0))
+            a.walk_to_zone(sparse_door)
+            a.path.add_noise_to_path(0.5, map1)
+            world1.add_actor(a)
 
     list_of_worlds.append(world1)
     print("World " + str(j) + " was created!")
 
-filename = 'hard_scenario_worlds'
+filename = 'hard_scenario_worlds_' + str(scenario) +'_'+str(amount_actors)
 outfile = open(filename,'wb')
 pickle.dump(list_of_worlds,outfile)
 outfile.close()
