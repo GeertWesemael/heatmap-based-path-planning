@@ -102,3 +102,35 @@ map2 = map_.Map(matrix_map2)
 world2 = world.World(map2)
 world2.plot_world()
 
+print("Run hard setup")
+filename = 'hard_scenario_worlds_1_20'
+infile = open(filename, 'rb')
+list_of_worlds = pickle.load(infile)
+infile.close()
+print("Unpickled")
+
+filename = 'hard_scenario_worlds_2_20'
+infile = open(filename, 'rb')
+list_of_worlds_2 = pickle.load(infile)
+infile.close()
+print("Unpickled")
+
+
+world1 = list_of_worlds[0]
+world_test = list_of_worlds[99]
+world_tests = list_of_worlds[10:100]
+print(len(world_tests))
+list_of_worlds = list_of_worlds[0:10]
+print(len(list_of_worlds))
+list_of_worlds[0].plot_world(hours=True,fr=hour_min_to_sec(9,30),to=hour_min_to_sec(10,30)) #bugg
+list_of_worlds[1].plot_world(hours=True,fr=hour_min_to_sec(9,30),to=hour_min_to_sec(10,30)) #bugg
+
+world2 = list_of_worlds_2[0]
+world_test_2 = list_of_worlds_2[99]
+world_tests_2 = list_of_worlds_2[10:100]
+print(len(world_tests_2))
+list_of_worlds_2 = list_of_worlds_2[0:10]
+print(len(list_of_worlds_2))
+list_of_worlds_2[0].plot_world(hours=True,fr=hour_min_to_sec(9,30),to=hour_min_to_sec(10,30)) #bugg
+list_of_worlds_2[1].plot_world(hours=True,fr=hour_min_to_sec(9,30),to=hour_min_to_sec(10,30)) #bugg
+
