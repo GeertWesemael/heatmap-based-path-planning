@@ -20,8 +20,8 @@ from datetime import datetime
 
 ##################################
 
-val = 3
-experiment = "tf"  # total,tf,prob_tf,wait
+val = 1
+experiment = "prob_tf"  # total,tf,prob_tf,wait
 amount_of_robots = 10
 
 if val == 1:
@@ -115,7 +115,7 @@ if experiment == "prob_tf":
 
 
 #################################################################################
-for value in range(1, 2):
+for value in range(1, 500):
     print("start value " + str(value))
     a_star_weight_factor = value
 
