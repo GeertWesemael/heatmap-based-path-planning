@@ -36,6 +36,20 @@ class Robot:
             if i.start_time <= start < i.end_time:
                 return self.weighted_astar_path_plan(destination, i, factor)
 
+    def weighted_astar_path_plan_timeframes_combined(self, destination, col_heatmaps, factor):
+        start = self.path.get_end_time()
+        list_of_matrixes = []
+        for heatmaps in col_heatmaps:
+            for i in heatmaps:
+                if i.start_time <= start < i.end_time:
+                    list_of_matrixes.append(i)
+                    print(i)
+                    print("-----------")
+
+        comb_heatmap = sum(list_of_matrixes)/len(list_of_matrixes)
+        print(comb_heatmap)
+        return self.weighted_astar_path_plan(destination, comb_heatmap, factor)
+
     def get_collisions(self, world, sample_rate, distance=1,out_time=2):
         collisions = 0
         t = self.path.get_start_time()

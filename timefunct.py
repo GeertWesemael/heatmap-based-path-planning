@@ -26,3 +26,6 @@ def sec_to_hour_min_string(sec):
 
 def sec_to_hour(sec):
     return sec/3600
+
+def unifromly_dist_time_(begin,end,amount):
+    return np.linspace(begin,end,num=amount+1,endpoint=False)[1:]

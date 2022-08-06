@@ -99,12 +99,15 @@ def heatmap_for_each_interval(world, interval, start_time, end_time, sample_rate
         t += interval
     return heatmaps
 
+#onnodig sum(np array is goed genoeg)
+# def combine_heatmaps(heatmaps):
+#     result = heatmaps[0]
+#     for i in range(1, len(heatmaps)):
+#         result += heatmaps[i]
+#     return result
 
-def combine_heatmaps(heatmaps):
-    result = heatmaps[0]
-    for i in range(1, len(heatmaps)):
-        result += heatmaps[i]
-    return result
+def combine_heatmaps(list_of_heatmap_matrixes):
+    return sum(list_of_heatmap_matrixes)/len(list_of_heatmap_matrixes)
 
 # convolution = [,,] or [,,,,]
 def combine_heatmaps_using_convolution(heatmaps,convolution):

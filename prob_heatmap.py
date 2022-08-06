@@ -44,25 +44,6 @@ class ProbHeatmap:
                     to_check.append((round(x), round(y_hi)))
             return to_check
 
-        # #find earliest and latest time
-        # start = 999999999999
-        # end = 0
-        # for w in self.worlds:
-        #     acs = w.actors
-        #     for a in acs:
-        #         if self.start_time is None and a.path.get_start_time() < start:
-        #             start = a.path.get_start_time()
-        #         if self.end_time is None and a.path.get_end_time() > end:
-        #             end = a.path.get_end_time()
-        #         else:
-        #             till = self.end_time
-        # if self.end_time is not None:
-        #     start = self.start_time
-        # if self.end_time is not None:
-        #     end = self.end_time
-        # if start > end:
-        #     raise Exception("no correct start or end date")
-
         t = self.start_time
         till = self.end_time
 

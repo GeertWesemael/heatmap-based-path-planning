@@ -13,6 +13,26 @@ import matplotlib.pyplot as plt
 from timefunct import sec_to_hour, hour_min_to_sec
 from timefunct import random_time_between, random_time_between_, sec_to_hour_min_string
 #
+# matrix_map1 = [[1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+#                [1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+#                [1, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+#                [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [1, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+#                [1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+#                [1, 1, 1, 1, 1, 1, 0, 1, 1, 1]]
+# map1 = map_.Map(matrix_map1)
+# zone_a = zone.Zone("zone_a", "A", [(3, 3), (3, 4), (4, 3), (4, 4)])
+# zone_b = zone.Zone("zone_b", "B", [(9, 2), (9, 3), (9, 4), (9, 5)])
+# zone_c = zone.Zone("zone_c", "C", [(6, 0)])
+# zone_d = zone.Zone("zone_d", "D", [(6, 7)])
+# zones = [zone_a, zone_b, zone_c, zone_d]
+# zone.print_zone(map1, zones)
+# all_zones = zone.Zone.combined_zones(zones)
+#
+# world1 = world.World(map1)
+# world1.plot_world()
+#
 # print("Run easy setup")
 # filename = 'easy_scenario_worlds_'
 # infile = open(filename, 'rb')
@@ -134,3 +154,26 @@ print(len(list_of_worlds_2))
 list_of_worlds_2[0].plot_world(hours=True,fr=hour_min_to_sec(9,30),to=hour_min_to_sec(10,30)) #bugg
 list_of_worlds_2[1].plot_world(hours=True,fr=hour_min_to_sec(9,30),to=hour_min_to_sec(10,30)) #bugg
 
+# look at it again later
+
+# heatm1 = heatmap.Heatmap(world1, sample_rate=1, scale=1)
+# heatm2 = heatmap.Heatmap(world2, sample_rate=1, scale=1)
+
+# prob_heatmaps1 = prob_heatmap.heatmap_for_each_interval(list_of_worlds, hour_min_to_sec(0,30), start_time=hour_min_to_sec(9,30), end_time=hour_min_to_sec(10,30),
+#                                                        sample_rate=1, scale=1)
+#
+# prob_heatmaps2 = prob_heatmap.heatmap_for_each_interval(list_of_worlds, hour_min_to_sec(0,30), start_time=hour_min_to_sec(9,30), end_time=hour_min_to_sec(10,30),
+#                                                        sample_rate=1, scale=1)
+#
+# r1 = robot.Robot((0,6), hour_min_to_sec(10,0), matrix_map2)
+# r1.weighted_astar_path_plan_timeframes((8,6), prob_heatmaps1, 90)
+#
+# r2 = robot.Robot((0,6), hour_min_to_sec(10,0), matrix_map2)
+# r2.weighted_astar_path_plan_timeframes((8,6), prob_heatmaps2, 90)
+#
+# r3 = robot.Robot((0,6), hour_min_to_sec(10,0), matrix_map2)
+# r3.weighted_astar_path_plan_timeframes_combined((8,6), [prob_heatmaps1,prob_heatmaps2], 90)
+#
+# r1.path.plot_path()
+# r2.path.plot_path()
+# r3.path.plot_path()

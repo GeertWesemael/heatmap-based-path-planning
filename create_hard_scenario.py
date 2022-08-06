@@ -74,24 +74,24 @@ for j in range(1000):
             world1.add_actor(a)
 
     else:
-        dense_zone = zone_a
-        dense_door = zone_c
-        sparse_zone = zone_b
-        sparse_door = zone_d
+        sparse_zone = zone_a
+        sparse_door = zone_c
+        dense_zone = zone_b
+        dense_door = zone_d
         #amount of actors
         for _ in range(amount_actors):
             #dense zone
-            a = actor.Actor.actor_at_zone(dense_door, random_time_between(9, 40, 10, 20), map1)
-            a.walk_to_zone(dense_zone)
-            a.wait(random_time_between(0, 1, 0, 2))
-            a.walk_to_zone(dense_door)
-            a.path.add_noise_to_path(0.5, map1)
-            world1.add_actor(a)
-            #sparse zone
-            a = actor.Actor.actor_at_zone(sparse_door, random_time_between(9, 59, 10, 1), map1)
+            a = actor.Actor.actor_at_zone(sparse_door, random_time_between(9, 40, 10, 20), map1)
             a.walk_to_zone(sparse_zone)
             a.wait(random_time_between(0, 1, 0, 2))
             a.walk_to_zone(sparse_door)
+            a.path.add_noise_to_path(0.5, map1)
+            world1.add_actor(a)
+            #sparse zone
+            a = actor.Actor.actor_at_zone(dense_door, random_time_between(9, 59, 10, 1), map1)
+            a.walk_to_zone(dense_zone)
+            a.wait(random_time_between(0, 1, 0, 2))
+            a.walk_to_zone(dense_door)
             a.path.add_noise_to_path(0.5, map1)
             world1.add_actor(a)
 
