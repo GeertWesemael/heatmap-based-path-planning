@@ -12,12 +12,34 @@ time2 = [8,8,8,8,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.5
 plt.plot(weight_factor, collisions, 'b.-')
 plt.ylabel('average amount of collisions')
 plt.xlabel('weight factor')
+plt.title('average amount of collisions for time-framed heatmaps')
 plt.axis([0.1, 0.57, -0.001, 0.021])
 plt.grid(True)
 # [xmin, xmax, ymin, ymax]
 plt.show()
 
 plt.plot(weight_factor, time, 'b.-')
+plt.ylabel('average amount of time')
+plt.xlabel('weight factor')
+plt.title('average amount of time for time-framed heatmaps')
+# plt.axis([0.1, 0.57, -0.001, 0.021])
+plt.axis([0.09, 0.57, 7.5, 13])
+plt.grid(True)
+# [xmin, xmax, ymin, ymax]
+plt.show()
+
+# Prob time framed compare
+plt.plot(weight_factor2, collisions2, 'b.-')
+plt.title('average amount of collisions for time-framed probability heatmaps')
+plt.ylabel('average amount of collisions')
+plt.xlabel('weight factor')
+plt.axis([100, 0.57, -0.001, 0.021])
+plt.grid(True)
+# [xmin, xmax, ymin, ymax]
+plt.show()
+
+plt.plot(weight_factor2, time2, 'b.-')
+plt.title('average amount of time for time-framed probability heatmaps')
 plt.ylabel('average amount of time')
 plt.xlabel('weight factor')
 # plt.axis([0.1, 0.57, -0.001, 0.021])

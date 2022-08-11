@@ -143,6 +143,11 @@ class World:
         else:
             #add actors
             for a in self.actors:
+                if to is not None and fr is not None:
+                    if a.path.get_start_time() > to:
+                        continue
+                    if a.path.get_end_time() < fr:
+                        continue
                 data = np.array(a.path.values)
 
                 x = data[:, 0]
