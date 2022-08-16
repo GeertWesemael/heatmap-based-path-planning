@@ -67,7 +67,7 @@ ax.fill_between(x, y1, y2, alpha=.5, linewidth=0)
 # ax.plot(x, (y1 + y2)/2,'b.-', linewidth=2)
 ax.plot(x, y1,'r.-', linewidth=2)
 ax.plot(x, y2,'g.-', linewidth=2)
-ax.set_xticks([0]+time2[5:])
+ax.set_xticks([0]+time2[5:]+[hour_min_to_sec(1, 10),hour_min_to_sec(1, 20),hour_min_to_sec(1, 30),hour_min_to_sec(1, 40),hour_min_to_sec(1, 50)])
 plt.axis([-120, hour_min_to_sec(2, 0)+120, 0, 520])
 plt.grid(True)
 # ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
