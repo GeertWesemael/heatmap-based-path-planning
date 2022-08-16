@@ -74,7 +74,7 @@ def get_value(hm):
 uberstart = hour_min_to_sec(9,0)
 ubertill = hour_min_to_sec(13,0)
 stepsize = hour_min_to_sec(0,1)
-interval = hour_min_to_sec(0,30)
+interval = hour_min_to_sec(2,0)
 i= uberstart
 
 timing_list = []
@@ -93,7 +93,7 @@ while i < ubertill:
 print(timing_list)
 print(value_list)
 
-plt.plot(timing_list,value_list)
+plt.plot(timing_list,value_list,'b.-')
 plt.title("sliding heatmap with interval: " + sec_to_hour_min_string(interval))
 plt.show()
 
