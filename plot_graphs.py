@@ -14,7 +14,7 @@ time2 = [8,8,8,8,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.52,9.5
 plt.plot(weight_factor, collisions, 'b.-')
 plt.ylabel('average amount of collisions')
 plt.xlabel('weight factor')
-plt.title('average amount of collisions for time-framed heatmaps')
+plt.title('Average amount of collisions for time-framed heatmaps')
 plt.axis([0.1, 0.57, -0.001, 0.021])
 plt.grid(True)
 # [xmin, xmax, ymin, ymax]
@@ -23,7 +23,7 @@ plt.show()
 plt.plot(weight_factor, time, 'b.-')
 plt.ylabel('average amount of time')
 plt.xlabel('weight factor')
-plt.title('average amount of time for time-framed heatmaps')
+plt.title('Average amount of time for time-framed heatmaps')
 # plt.axis([0.1, 0.57, -0.001, 0.021])
 plt.axis([0.09, 0.57, 7.5, 13])
 plt.grid(True)
@@ -32,7 +32,7 @@ plt.show()
 
 # Prob time framed compare
 plt.plot(weight_factor2, collisions2, 'b.-')
-plt.title('average amount of collisions for time-framed probability heatmaps')
+plt.title('Average amount of collisions for time-framed probability heatmaps')
 plt.ylabel('average amount of collisions')
 plt.xlabel('weight factor')
 plt.axis([100, 0.57, -0.001, 0.021])
@@ -41,7 +41,7 @@ plt.grid(True)
 plt.show()
 
 plt.plot(weight_factor2, time2, 'b.-')
-plt.title('average amount of time for time-framed probability heatmaps')
+plt.title('Average amount of time for time-framed probability heatmaps')
 plt.ylabel('average amount of time')
 plt.xlabel('weight factor')
 # plt.axis([0.1, 0.57, -0.001, 0.021])
@@ -50,9 +50,11 @@ plt.grid(True)
 plt.show()
 
 
+##### INTERVAL SIZE 10
+
 # data
 lower_limit = [134,127,118,106,105,103,116,242,199,251,299,300]
-upper_limit = [249,174,187,208,249,373,499,414,499,292,302,301]
+upper_limit = [249,174,187,208,249,373,745,414,1490,292,302,301]
 time = ["0:00:10","0:00:30","0:01:00","0:02:00","0:05:00","0:10:00","0:20:00","0:30:00","0:40:00","0:50:00","1:00:00","2:00:00"]
 time2 = [10,30,hour_min_to_sec(0, 1),hour_min_to_sec(0, 2),hour_min_to_sec(0, 5),hour_min_to_sec(0, 10),
  hour_min_to_sec(0, 20),hour_min_to_sec(0, 30),hour_min_to_sec(0, 40),hour_min_to_sec(0, 50),hour_min_to_sec(1, 0),hour_min_to_sec(2, 0)]
@@ -65,24 +67,33 @@ y2 =lower_limit
 fig, ax = plt.subplots()
 ax.fill_between(x, y1, y2, alpha=.5, linewidth=0)
 # ax.plot(x, (y1 + y2)/2,'b.-', linewidth=2)
-ax.plot(x, y1,'r.-', linewidth=2)
-ax.plot(x, y2,'g.-', linewidth=2)
+ax.plot(x, y1,'r.-', linewidth=2,label="lowest weight value for slowest path")
+ax.plot(x, y2,'g.-', linewidth=2,label="highest weight value for fastest path")
+plt.legend(loc="upper right")
 ax.set_xticks([0]+time2[5:]+[hour_min_to_sec(1, 10),hour_min_to_sec(1, 20),hour_min_to_sec(1, 30),hour_min_to_sec(1, 40),hour_min_to_sec(1, 50)])
-plt.axis([-120, hour_min_to_sec(2, 0)+120, 0, 520])
+plt.axis([-120, hour_min_to_sec(2, 0)+120, 0, 1600])
 plt.grid(True)
 # ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
 #        ylim=(0, 8), yticks=np.arange(1, 8))
+ax.set_xlabel("time (s)")
+ax.set_ylabel("weight factor")
+plt.title('Effect of interval size on weight value')
+
 plt.show()
 
 fig, ax = plt.subplots()
 
 ax.fill_between(x, y1, y2, alpha=.5, linewidth=0)
 # ax.plot(x, (y1 + y2)/2,'b.-', linewidth=2)
-ax.plot(x, y1,'r.-', linewidth=2)
-ax.plot(x, y2,'g.-', linewidth=2)
+ax.plot(x, y1,'r.-', linewidth=2,label="lowest weight value for slowest path")
+ax.plot(x, y2,'g.-', linewidth=2,label="highest weight value for fastest path")
 ax.set_xticks([0,hour_min_to_sec(0, 1),hour_min_to_sec(0, 2),hour_min_to_sec(0, 3),hour_min_to_sec(0, 4),hour_min_to_sec(0, 5),hour_min_to_sec(0, 6),hour_min_to_sec(0, 7),hour_min_to_sec(0, 8),hour_min_to_sec(0, 9),hour_min_to_sec(0, 10)])
-plt.axis([0, hour_min_to_sec(0, 10), 0, 520])
+plt.axis([0, hour_min_to_sec(0, 10), 0, 500])
 plt.grid(True)
+ax.set_xlabel("time (s)")
+ax.set_ylabel("weight factor")
+plt.title('Effect of interval size on weight value')
+
 plt.show()
 
 
@@ -107,12 +118,12 @@ fig, axs = plt.subplots(5, 1)
 # fig.subplots_adjust(hspace=0)
 
 fig.suptitle('The fastest path values on a heatmap with the given interval')
-# tick10 = [32400, 32400 + 600, 32400 + 2 * 600, 32400 + 3 * 600, 32400 + 4 * 600, 32400 + 5 * 600, 32400 + 6 * 600, 32400 + 7 * 600,32400 + 8 * 600,32400 + 9 * 600,32400 + 10 * 600,32400 + 11 * 600,32400 + 12 * 600,32400 + 13 * 600,32400 + 14 * 600,46740]
-tick20 = [32400, 32400 + 1200, 32400 + 2 * 1200, 32400 + 3 * 1200, 32400 + 4 * 1200, 32400 + 5 * 1200, 32400 + 6 * 1200, 32400 + 7 * 1200, 32400 + 8 * 1200, 32400 + 9 * 1200, 32400 + 10 * 1200, 32400 + 11 * 1200,46740]
-tick30 = [32400, 32400 + 1800, 32400 + 2 * 1800, 32400 + 3 * 1800, 32400 + 4 * 1800, 32400 + 5 * 1800, 32400 + 6 * 1800, 32400 + 7 * 1800, 46740]
-tick40 = [32400, 32400 + 2400, 32400 + 2 * 2400, 32400 + 3 * 2400, 32400 + 4 * 2400,32400 + 5 * 2400,46740]
-tick50 = [32400, 32400 + 3000, 32400 + 2 * 3000, 32400 + 3 * 3000, 32400 + 4 * 3000,46740]
-tick1  = [32400, 32400 + 3600, 32400 + 2 * 3600, 32400 + 3 * 3600,46740]
+# tick10 = [32400, 34200 + 600, 34200 + 2 * 600, 34200 + 3 * 600, 34200 + 4 * 600, 34200 + 5 * 600, 34200 + 6 * 600, 34200 + 7 * 600,34200 + 8 * 600,34200 + 9 * 600,34200 + 10 * 600,34200 + 11 * 600,34200 + 12 * 600,34200 + 13 * 600,34200 + 14 * 600,46740]
+tick20 = [32400,34200, 34200 + 1200, 34200 + 2 * 1200, 34200 + 3 * 1200, 34200 + 4 * 1200,46740]
+tick30 = [32400,34200, 34200 + 1800, 34200 + 2 * 1800, 34200 + 3 * 1800, 46740]
+tick40 = [32400,34200, 34200 + 2400, 34200 + 2 * 2400, 46740]
+tick50 = [32400,34200, 34200 + 3000, 46740]
+tick1  = [32400,34200, 34200 + 3600,46740]
 
 # axs[0].plot(x, min10)
 # axs[0].grid(True)
@@ -141,7 +152,30 @@ axs[4].set_ylabel("1 hour")
 
 axs[4].set_xlabel('time (s)')
 
-
 fig.tight_layout()
 plt.show()
 
+##### INTERVAL SIZE 1
+
+# data
+values = [98,108,102,99,105,103,116,242,232,251,301,300]
+time = ["0:00:10","0:00:30","0:01:00","0:02:00","0:05:00","0:10:00","0:20:00","0:30:00","0:40:00","0:50:00","1:00:00","2:00:00"]
+time2 = [10,30,hour_min_to_sec(0, 1),hour_min_to_sec(0, 2),hour_min_to_sec(0, 5),hour_min_to_sec(0, 10),
+ hour_min_to_sec(0, 20),hour_min_to_sec(0, 30),hour_min_to_sec(0, 40),hour_min_to_sec(0, 50),hour_min_to_sec(1, 0),hour_min_to_sec(2, 0)]
+
+x = time2
+
+# plot
+fig, ax = plt.subplots()
+ax.plot(x, values, 'b.-')
+# plt.plot(x, values, 'b.-')
+ax.set_xticks([0]+time2[5:]+[hour_min_to_sec(1, 10),hour_min_to_sec(1, 20),hour_min_to_sec(1, 30),hour_min_to_sec(1, 40),hour_min_to_sec(1, 50)])
+plt.axis([-120, hour_min_to_sec(2, 0)+120, 0, 400])
+plt.grid(True)
+# ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+#        ylim=(0, 8), yticks=np.arange(1, 8))
+ax.set_xlabel("time (s)")
+ax.set_ylabel("weight factor")
+plt.title('Effect of interval size on weight value (departure: 10AM)')
+
+plt.show()

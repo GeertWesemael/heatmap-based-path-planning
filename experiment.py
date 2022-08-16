@@ -34,7 +34,7 @@ amount_of_robots = 10
 if val == 1:
     ########### easy setup ###########
     robot_start_time = None
-    interval = hour_min_to_sec(0,40)
+    interval = hour_min_to_sec(0,25)
     start = hour_min_to_sec(9, 30)
     end = hour_min_to_sec(11, 00)
     start_loc_robot = (6, 7)
@@ -122,7 +122,7 @@ if experiment == "prob_tf":
 
 
 # #################################################################################
-for value in range(1500, 1502):
+for value in range(100, 500):
     print("start value " + str(value))
     a_star_weight_factor = value
 
