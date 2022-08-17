@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from timefunct import hour_min_to_sec
+from timefunct import hour_min_to_sec, sec_to_min
 
 weight_factor = [0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57]
 collisions = [0.02,0.02,0.02,0.02,0.02,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0,0,0,0,0]
@@ -60,6 +60,8 @@ time2 = [10,30,hour_min_to_sec(0, 1),hour_min_to_sec(0, 2),hour_min_to_sec(0, 5)
  hour_min_to_sec(0, 20),hour_min_to_sec(0, 30),hour_min_to_sec(0, 40),hour_min_to_sec(0, 50),hour_min_to_sec(1, 0),hour_min_to_sec(2, 0)]
 
 x = time2
+x = list(map(sec_to_min,x))
+xticks = list(map(sec_to_min,[0]+time2[5:]+[hour_min_to_sec(1, 10),hour_min_to_sec(1, 20),hour_min_to_sec(1, 30),hour_min_to_sec(1, 40),hour_min_to_sec(1, 50)]))
 y1 =upper_limit
 y2 =lower_limit
 
@@ -70,12 +72,12 @@ ax.fill_between(x, y1, y2, alpha=.5, linewidth=0)
 ax.plot(x, y1,'r.-', linewidth=2,label="lowest weight value for slowest path")
 ax.plot(x, y2,'g.-', linewidth=2,label="highest weight value for fastest path")
 plt.legend(loc="upper right")
-ax.set_xticks([0]+time2[5:]+[hour_min_to_sec(1, 10),hour_min_to_sec(1, 20),hour_min_to_sec(1, 30),hour_min_to_sec(1, 40),hour_min_to_sec(1, 50)])
-plt.axis([-120, hour_min_to_sec(2, 0)+120, 0, 1600])
+ax.set_xticks(xticks)
+plt.axis([sec_to_min(-120), sec_to_min(hour_min_to_sec(2, 0)+120), 0, 1600])
 plt.grid(True)
 # ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
 #        ylim=(0, 8), yticks=np.arange(1, 8))
-ax.set_xlabel("time (s)")
+ax.set_xlabel("time (min)")
 ax.set_ylabel("weight factor")
 plt.title('Effect of interval size on weight value')
 
@@ -83,14 +85,16 @@ plt.show()
 
 fig, ax = plt.subplots()
 
+xticks = list(map(sec_to_min,[0,hour_min_to_sec(0, 1),hour_min_to_sec(0, 2),hour_min_to_sec(0, 3),hour_min_to_sec(0, 4),hour_min_to_sec(0, 5),hour_min_to_sec(0, 6),hour_min_to_sec(0, 7),hour_min_to_sec(0, 8),hour_min_to_sec(0, 9),hour_min_to_sec(0, 10)]))
+
 ax.fill_between(x, y1, y2, alpha=.5, linewidth=0)
 # ax.plot(x, (y1 + y2)/2,'b.-', linewidth=2)
 ax.plot(x, y1,'r.-', linewidth=2,label="lowest weight value for slowest path")
 ax.plot(x, y2,'g.-', linewidth=2,label="highest weight value for fastest path")
-ax.set_xticks([0,hour_min_to_sec(0, 1),hour_min_to_sec(0, 2),hour_min_to_sec(0, 3),hour_min_to_sec(0, 4),hour_min_to_sec(0, 5),hour_min_to_sec(0, 6),hour_min_to_sec(0, 7),hour_min_to_sec(0, 8),hour_min_to_sec(0, 9),hour_min_to_sec(0, 10)])
-plt.axis([0, hour_min_to_sec(0, 10), 0, 500])
+ax.set_xticks(xticks)
+plt.axis([0, sec_to_min(hour_min_to_sec(0, 10)), 0, 500])
 plt.grid(True)
-ax.set_xlabel("time (s)")
+ax.set_xlabel("time (min)")
 ax.set_ylabel("weight factor")
 plt.title('Effect of interval size on weight value')
 

@@ -23,6 +23,11 @@ def random_time_between_(sec1, sec2):
 def sec_to_hour_min_string(sec):
     return str(datetime.timedelta(seconds=sec))
 
+def sec_to_date_time(sec):
+    return datetime.timedelta(seconds=sec)
+
+def sec_to_min(sec):
+    return sec/60
 
 def sec_to_hour(sec):
     return sec/3600
