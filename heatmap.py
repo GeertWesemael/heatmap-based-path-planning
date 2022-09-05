@@ -167,6 +167,6 @@ def animate_heatmaps(heatmaps):
                 else:
                     number = str(number)
                 text = ax.text(x, y, number, ha="center", va="center", color="w", fontsize="x-small")
-        plt.pause(10)
+        plt.pause(2)
         plt.tight_layout()
         cb.remove()
